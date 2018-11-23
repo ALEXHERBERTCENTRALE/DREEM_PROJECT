@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 def maxAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):
     # Returns the maximum amplitude of a list of frequencies
@@ -110,7 +111,16 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , save = Fa
         c+=temp
     
     if save:
-        np.savetxt( name_save + '.txt' , rep , delimiter=',', fmt="%s")
+        temp_var_file = open(name_save + '.txt','wb')
+        pickle.dump(rep , temp_var_file)
+        temp_var_file.close()
+        
+        #Use next 3 lines to read
+        # temp_var_file = open(name_save + '.txt','rb')
+        # rep = pickle.load(temp_var_file)
+        # temp_var_file.close()
+        
+        #np.savetxt( name_save + '.txt' , rep , delimiter=',', fmt="%s")
     
     return rep
 
