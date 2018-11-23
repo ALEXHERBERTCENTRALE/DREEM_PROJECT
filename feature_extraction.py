@@ -96,7 +96,7 @@ def extractFeatureAll(h5file_freq , methodOne , param ):
         rep[: ,k_id*dim_feature_per_signal:(k_id+1)*dim_feature_per_signal ] =  np.array( list(methodOne(h5file_freq[k][i] , param) for i in range(nb_samples)  ))
     return rep
 
-def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param):
+def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , save = False , name_save = None):
     # Returns the concatenation of design matrices for a list of methods
     nb_samples = len(h5file_freq[list(h5file_freq.keys())[0]])
     sum_dim_feature_per_signal = sum( methodOne(rep_dim_feature_per_signal = True) for methodOne in list_methodOne )
@@ -109,7 +109,10 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param):
         rep[:,c:c+temp] = extractFeatureAll(h5file_freq , methodOne , list_param[i] )
         i+=1
         c+=temp
-        
+    
+    if save:
+        np.savetxt( name_save+'.txt' , rep , delimiter=',',fmt=\"%s\")
+    
     return rep
 
 ## to do some testing
