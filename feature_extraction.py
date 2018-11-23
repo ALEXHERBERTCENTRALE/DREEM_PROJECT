@@ -5,7 +5,7 @@ def maxAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = Fals
     # Returns the maximum amplitude of a list of frequencies
     if rep_dim_feature_per_signal:
         return 1
-    return np.array([max(list_freq)])
+    return [max(list_freq)]
 
 
 def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):
@@ -16,8 +16,8 @@ def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_sign
     amp_lim, = param
     for i in range(len(list_freq)-1,-1,-1):
         if list_freq[i] > amp_lim:
-            return np.array([i+1])
-    return np.array([0])
+            return [i+1]
+    return [0]
 
 
 def meanOfInterval(signal, freq_min, freq_max):
@@ -42,7 +42,7 @@ def nbPikesOne(list_freq = None, param = None , rep_dim_feature_per_signal = Fal
             isIntervalInAPike.append(False)
         if not(isIntervalInAPike[-2]) and isIntervalInAPike[-1]:
             nb_pikes+=1
-    return np.array([nb_pikes])
+    return [nb_pikes]
 
 
 
@@ -52,7 +52,7 @@ def meanDiffNeighbOne(list_freq = None , param = None , rep_dim_feature_per_sign
     # Returns the average of absolute difference of amplitude between all neighbours frequencies
     if rep_dim_feature_per_signal:
         return 1
-    return np.array([np.average(list(abs(list_freq[i+1]-list_freq[i]) for i in range(len(list_freq)-1)))])
+    return [np.average(list(abs(list_freq[i+1]-list_freq[i]) for i in range(len(list_freq)-1)))]
 
 
     
@@ -62,7 +62,7 @@ def stdDeviationNbOne(list_freq = None , param = None , rep_dim_feature_per_sign
         return 1
     n_nb, = param
     c_max = len(list_freq)//n_nb
-    return np.array([np.average(list(np.std(list_freq[c*n_nb:(c+1)*n_nb]) for c in range(c_max)))])
+    return [np.average(list(np.std(list_freq[c*n_nb:(c+1)*n_nb]) for c in range(c_max)))]
 
     
 def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):   #param = [th_amp , th_freq]
@@ -72,7 +72,7 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
         return 1
     
     th_amp , th_freq = param
-    return np.array([max(list_freq[th_freq:-1])>th_amp])
+    return [max(list_freq[th_freq:-1])>th_amp]
     
 
 
@@ -96,11 +96,27 @@ def extractFeatureAll(h5file_freq , methodOne , param ):
         rep[: ,k_id*dim_feature_per_signal:(k_id+1)*dim_feature_per_signal ] =  np.array( list(methodOne(h5file_freq[k][i] , param) for i in range(nb_samples)  ))
     return rep
 
+def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param):
+    # Returns the concatenation of design matrices for a list of methods
+    nb_samples = len(h5file_freq[list(h5file_freq.keys())[0]])
+    sum_dim_feature_per_signal = sum( methodOne(rep_dim_feature_per_signal = True) for methodOne in list_methodOne )
+    rep = np.zeros((nb_samples , len(h5file_freq)*sum_dim_feature_per_signal ))
+    
+    c = 0
+    i = 0
+    for methodOne in list_methodOne :
+        temp = len(h5file_freq)*methodOne(rep_dim_feature_per_signal = True)
+        rep[:,c:c+temp] = extractFeatureAll(h5file_freq , methodOne , list_param[i] )
+        i+=1
+        c+=temp
+        
+    return rep
+
 ## to do some testing
 # pseudo-h5 file with 3 keys (3 indicators), and 3 samples, of length 29 each
 dico = {}
-dico["cle1"] = [np.arange(1,30) , np.random.normal(10,5,29) , np.arange(2,31)]
-dico["cle2"] = [np.arange(2,31), np.arange(1,30) , np.random.normal(12,6,29)]
-dico["cle3"] = [np.random.normal(42,1,29),np.arange(2,31),np.arange(10,39)]
+dico["cle1"] = [np.arange(1,30) , np.random.normal(10,5,29) , np.arange(2,31) , np.random.uniform(12,45,29) ]
+dico["cle2"] = [np.arange(2,31), np.arange(1,30) , np.random.uniform(12,45,29) , np.random.normal(12,6,29)]
+dico["cle3"] = [np.random.normal(42,1,29), np.random.uniform(12,45,29), np.arange(2,31),np.arange(10,39)]
     
     
