@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def maxAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):
     # Returns the maximum amplitude of a list of frequencies
     if rep_dim_feature_per_signal:
