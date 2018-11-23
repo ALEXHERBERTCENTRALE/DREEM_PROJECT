@@ -1,14 +1,27 @@
 import numpy as np
 import pickle
 
-def maxAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):
+## Auxiliary functions
+def meanOfInterval(signal, freq_min, freq_max):
+    return np.average(signal[freq_min:freq_max])
+    
+def buildIntervals(list_length, interval_width):
+    return list([i, i+interval_width] for i in range(0,list_length,interval_width))
+
+def mobilMean(signal , interval_width):  #use an odd number as interval_width, otherwise the width will be interval_width + 1.
+    side_interval = interval_width//2
+    return list( np.average( signal[ max(i-side_interval , 0) : min( i+side_interval+1 , len(signal))]) for i in range(len(signal)) )
+
+## methodOne(s) : feature-extraction methods
+
+def maxAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):  # param useless
     # Returns the maximum amplitude of a list of frequencies
     if rep_dim_feature_per_signal:
         return 1
     return [max(list_freq)]
 
 
-def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):
+def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_signal = False):  # param = [amp_lim]
     # Returns the (minimum) frequency above which all frequencies have amplitude < amp_lim = param[0]
     if rep_dim_feature_per_signal:
         return 1
@@ -20,32 +33,80 @@ def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_sign
     return [0]
 
 
-def meanOfInterval(signal, freq_min, freq_max):
-    return np.average(signal[freq_min:freq_max])
-    
-def buildIntervals(list_length, interval_width):
-    return list([i, i+interval_width] for i in range(0,list_length,interval_width))
 
 def nbPikesOne(list_freq = None, param = None , rep_dim_feature_per_signal = False ):   #param = [interval_width, amp_lim]
+    # Returns the number of frequency pikes for a given (amp_lim) amplitude, averaging with a mobile mean
+    if rep_dim_feature_per_signal:
+        return 1
+    interval_width, amp_lim = param
+    mobil_mean_list_freq = mobilMean(list_freq , interval_width)
+    nb_pikes = 0
+    # is_interval_in_a_pike = [False , False]
+    # for i in range(len(mobil_mean_list_freq)):
+    #     if mobil_mean_list_freq[i] > amp_lim:
+    #         is_interval_in_a_pike = [True , is_interval_in_a_pike[0] ]
+    #     else:
+    #         is_interval_in_a_pike = [False , is_interval_in_a_pike[0] ]
+    #     if not(is_interval_in_a_pike[1]) and is_interval_in_a_pike[0]:
+    #         nb_pikes+=1
+    
+    is_interval_in_a_pike = 4   #code : 1 = [T,T] , 2 = [T,F] , 3 = [F,T] , 4 = [F,F]
+    for i in range(len(mobil_mean_list_freq)):
+        if mobil_mean_list_freq[i] > amp_lim:
+            is_interval_in_a_pike = 1 if is_interval_in_a_pike in [1,2] else 2
+        else:
+            is_interval_in_a_pike = 3 if is_interval_in_a_pike in [1,2] else 4
+        if is_interval_in_a_pike==2:
+            nb_pikes+=1
+    return [nb_pikes]
+
+
+def nbPikesFastOne(list_freq = None, param = None , rep_dim_feature_per_signal = False ):   #param = [interval_width, amp_lim]
     # Returns the number of frequency pikes for a given (amp_lim) amplitude, averaging over an interval
     if rep_dim_feature_per_signal:
         return 1
     interval_width, amp_lim = param
     intervals = buildIntervals(len(list_freq), interval_width)
     nb_pikes = 0
-    isIntervalInAPike = [False]
+    is_interval_in_a_pike = [False , False]
+    # for minim, maxim in intervals:
+    #     mean_value = meanOfInterval(list_freq, minim, maxim)
+    #     if mean_value > amp_lim:
+    #         is_interval_in_a_pike = [True , is_interval_in_a_pike[0] ]
+    #     else:
+    #         is_interval_in_a_pike = [False , is_interval_in_a_pike[0] ]
+    #     if not(is_interval_in_a_pike[1]) and is_interval_in_a_pike[0]:
+    #         nb_pikes+=1
+    
+    is_interval_in_a_pike = 4   #code : 1 = [T,T] , 2 = [T,F] , 3 = [F,T] , 4 = [F,F]
     for minim, maxim in intervals:
         mean_value = meanOfInterval(list_freq, minim, maxim)
         if mean_value > amp_lim:
-            isIntervalInAPike.append(True)
+            is_interval_in_a_pike = 1 if is_interval_in_a_pike in [1,2] else 2
         else:
-            isIntervalInAPike.append(False)
-        if not(isIntervalInAPike[-2]) and isIntervalInAPike[-1]:
+            is_interval_in_a_pike = 3 if is_interval_in_a_pike in [1,2] else 4
+        if is_interval_in_a_pike==2:
             nb_pikes+=1
     return [nb_pikes]
 
 
+def indexMaxAmpOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):  # param = [ interval_width ]
+    # Give the index of maximum amplitude, for the data averaged with a mobile mean of size interval_width
+    if rep_dim_feature_per_signal:
+        return 1
+    interval_width, = param
+    mobil_mean_list_freq = mobilMean(list_freq , interval_width)
+    return [mobil_mean_list_freq.index(max(mobil_mean_list_freq))]
 
+def indexMaxAmpFastOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):  # param = [ interval_width ]
+    # Give the index of maximum amplitude, for the data averaged over fixed intervals. Probably way faster than indexMaxAmpOne, though less accurate.
+    if rep_dim_feature_per_signal:
+        return 1
+    interval_width, = param
+    i_max = len(list_freq)//interval_width
+    #side_interval = interval_width//2
+    list_mean = list( np.average( list_freq[i*interval_width:(i+1)*interval_width]) for i in range(i_max) )
+    return [ list_mean.index(max(list_mean))*interval_width + interval_width//2 ]
 
 
 def meanDiffNeighbOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):  #param is useless
@@ -57,7 +118,7 @@ def meanDiffNeighbOne(list_freq = None , param = None , rep_dim_feature_per_sign
 
     
 def stdDeviationNbOne(list_freq = None , param = None , rep_dim_feature_per_signal = False ):  #param = [ n_nb ]
-    # Returns the average of standard deviations computed on a given number of points
+    # Returns the average of standard deviations computed on a given number of points (separation of x-axis in intervals of the same length)
     if rep_dim_feature_per_signal:
         return 1
     n_nb, = param
@@ -65,7 +126,7 @@ def stdDeviationNbOne(list_freq = None , param = None , rep_dim_feature_per_sign
     return [np.average(list(np.std(list_freq[c*n_nb:(c+1)*n_nb]) for c in range(c_max)))]
 
     
-def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):   #param = [th_amp , th_freq]
+def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):   # param = [th_amp , th_freq]
     # Returns a boolean, True iff there is a point in the upper right corner, defined by the parameters
     # Consider returning TRUE iff there are more than a given number of points in the upper right corner
     if rep_dim_feature_per_signal:
@@ -76,12 +137,14 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     
 
 
-def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):
+def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):  # param useless
     # Pointless method to test extractFeatureAll
     if rep_dim_feature_per_signal:
         return 2
     
     return np.array([1,2])
+
+## Global feature-extraction methods
     
 def extractFeatureAll(h5file_freq , methodOne , param ):
     # Method giving the design matrix of h5file, given a certain method
