@@ -110,7 +110,7 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , save = Fa
         c+=temp
     
     if save:
-        np.savetxt( name_save+'.txt' , rep , delimiter=',',fmt=\"%s\")
+        np.savetxt( name_save + '.txt' , rep , delimiter=',')
     
     return rep
 
