@@ -9,8 +9,11 @@ def buildIntervals(list_length, interval_width):
     return list([i, i+interval_width] for i in range(0,list_length,interval_width))
 
 def mobilMean(signal , interval_width):  #use an odd number as interval_width, otherwise the width will be interval_width + 1.
-    side_interval = interval_width//2
-    return list( np.average( signal[ max(i-side_interval , 0) : min( i+side_interval+1 , len(signal))]) for i in range(len(signal)) )
+    # side_interval = interval_width//2
+    # return list( np.average( signal[ max(i-side_interval , 0) : min( i+side_interval+1 , len(signal))]) for i in range(len(signal)) )
+    cumsum = np.cumsum(np.insert(signal, 0, 0)) 
+    return (cumsum[interval_width:] - cumsum[:-interval_width]) / float(interval_width)
+
 
 ## methodOne(s) : feature-extraction methods
 
