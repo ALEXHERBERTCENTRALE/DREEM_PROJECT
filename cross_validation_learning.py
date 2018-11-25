@@ -47,7 +47,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
         # Fit classifier
         classifier.fit(Xtrain, ytrain)
 
-        # Predict probabilities (of belonging to +1 class) on test data
+        # Predict probabilities on test data
         ytest_prob = classifier.predict_proba(Xtest)
         ytest_pred = classifier.predict(Xtest)
 
@@ -58,33 +58,71 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
     return pred, prob
 
 
-def learnAndPredict(design_matrix, mlMethod, list_param, n_folds):
-    dimensions = list(len(param) for param in list_param)
+def learn(design_matrix, mlMethod, list_param, n_folds):
+    
+    labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+
+    dimensions = list(len(param) for param in list_param[::-1])
+
     nb_total_combination = reduce(operator.mul, dimensions, 1)
+    
+    # cas où la méthode de ML ne prend aucun hyperparamètre en argument
+    if(nb_total_combination==0):
+        clf = mlMethod()
+        ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
+        return [[]], [ypred], [yprob]
     
     list_theta=[0]*nb_total_combination
     list_ypred=[0]*nb_total_combination
     list_yprob=[0]*nb_total_combination
     
-    labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
-    
     n_params = len(list_param)
+    
+    # liste des tailles progressives par ajout de dimension. Ex : Matrice 3x4x5 =>  slices_size=[1,3,12]
+    slices_size= [1]+[0 for i in range(n_params-1)]
+    for k in range(n_params-1):
+        slices_size[k+1]=slices_size[k]*len(list_param[k])
+    
     for i in range(nb_total_combination):
-        p = i
+
+        p = i+1
         theta=[0]*n_params
-        for k in range(n_params):
+        
+        # récupération des valeurs des hyperparamètres
+        for k in range(n_params-1,-1,-1):
             
-            p = p%len(list_param[k])
-            theta[k]=list_param[k][p]
+            factor = slices_size[k]
+            quot= p//factor
+            rest= p%factor
+             
+            if rest==0:
+                 theta[k]=list_param[k][quot-1]
+                 p-=factor*(quot-1)
+            else:
+                theta[k]=list_param[k][quot]
+                p= rest
+        
         clf = mlMethod(*theta)
         
         ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
         list_theta[i]=theta
         list_ypred[i]=ypred
         list_yprob[i]=yprob
-    mat_theta = np.reshape(list_theta, dimensions)
-    mat_ypred = np.reshape(list_ypred, dimensions)
-    mat_yprob = np.reshape(list_yprob, dimensions)
+    
+    mat_theta_reshape_dim = dimensions + [n_params]
+    mat_theta = np.reshape(list_theta, mat_theta_reshape_dim)
+    
+    mat_ypred_yprob_reshape_dim = dimensions+ [len(design_matrix)]
+    mat_ypred = np.reshape(list_ypred, mat_ypred_yprob_reshape_dim)
+    mat_yprob = np.reshape(list_yprob, mat_ypred_yprob_reshape_dim)
+    
+    # permutation des matrices pour retrouver l'ordre initial des hyperparamètres
+    permut = [i for i in range(len(np.shape(mat_theta))-2,-1,-1)]+[len(np.shape(mat_theta))-1]
+    
+    mat_theta = np.transpose(mat_theta, permut)
+    mat_ypred = np.transpose(mat_ypred, permut)
+    mat_yprob = np.transpose(mat_yprob, permut)
+    
     return mat_theta, mat_ypred, mat_yprob
         
 
@@ -92,21 +130,31 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     
     labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
     
-    dimensions = np.shape(mat_ypred)
-    permut = [variable_hyperparam_id] + [i for i in range(len(dimensions)) if i != variable_hyperparam_id]
+    mat_theta_shape =  np.shape(mat_theta)
+    mat_ypred_yprob_shape = np.shape(mat_ypred)
+
+    permut = [variable_hyperparam_id] + [i for i in range(len(mat_theta_shape)) if i != variable_hyperparam_id]
+    #ypred_yprob_permut = [variable_hyperparam_id] + [i for i in range(len(mat_ypred_yprob_shape)) if i != variable_hyperparam_id]
+    
     mat_theta = np.transpose(mat_theta, permut)
     mat_ypred = np.transpose(mat_ypred, permut)
     mat_yprob = np.transpose(mat_yprob, permut)
 
-    index=[slice(dimensions[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
+    index=[slice(mat_ypred_yprob_shape[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
     
     f1_scores = [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred[tuple(index)]]
-    aurocs = [sklearn.metrics.auc(sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
-    
-    list_variable_hyperparam_values = mat_theta[tuple(index)]
-    
-    plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores)
-    plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs)
+    aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
+
+    #cas où il n'y a pas d'hyperparamètre
+    if len(mat_theta[0])==0:
+        print("F1-score :", *f1_scores)
+        print("AUROC :", *aurocs)
+        
+    else:
+        list_variable_hyperparam_values = mat_theta[tuple(index)][:,variable_hyperparam_id]
+        
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores)
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs)
     
     
 def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_name, scores):
@@ -115,12 +163,3 @@ def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_n
     plt.xlabel(variable_hyperparam_name, fontsize=16)
     plt.ylabel('Cross-validated : ' + score_name, fontsize=16)
     plt.title(variable_hyperparam_name, fontsize=16)
-    
-X_train_preprocessed = np.loadtxt('testX.txt',  delimiter=',', usecols=range(1, 2)).astype('float')
-X_test_preprocessed = np.loadtxt('testY.txt',  delimiter=',', usecols=range(1, 2)).astype('float')
-
-print(np.shape(X_train_preprocessed))
-print(np.shape(X_test_preprocessed))
-
-mat_theta, mat_ypred, mat_yprob = learnAndPredict(X_train_preprocessed, neighbors.KNeighborsClassifier, [[range(1,30,2)]], 10)    
-    
