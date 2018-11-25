@@ -134,7 +134,6 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     mat_ypred_yprob_shape = np.shape(mat_ypred)
 
     permut = [variable_hyperparam_id] + [i for i in range(len(mat_theta_shape)) if i != variable_hyperparam_id]
-    #ypred_yprob_permut = [variable_hyperparam_id] + [i for i in range(len(mat_ypred_yprob_shape)) if i != variable_hyperparam_id]
     
     mat_theta = np.transpose(mat_theta, permut)
     mat_ypred = np.transpose(mat_ypred, permut)
@@ -149,6 +148,8 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     if len(mat_theta[0])==0:
         print("F1-score :", *f1_scores)
         print("AUROC :", *aurocs)
+        print("\n")
+        printConfusionMatrix(labels,  mat_ypred)
         
     else:
         list_variable_hyperparam_values = mat_theta[tuple(index)][:,variable_hyperparam_id]
@@ -156,7 +157,16 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores)
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs)
     
-    
+def printConfusionMatrix(labels,  mat_ypred):
+    conf_mat = sklearn.metrics.confusion_matrix(labels,  mat_ypred[0], labels=None, sample_weight=None).T
+    print("Matrice de confusion : \n")
+    print("\t\tTrue 0  True 1  True 2  True 3  True 4")
+    for p in range(5):
+        row_to_print="Predicted " +str(p)
+        for t in range(5):
+            row_to_print+="\t"+  str(conf_mat[p,t])
+        print(row_to_print)
+
 def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_name, scores):
     plt.figure()
     plt.plot(list_variable_hyperparam_values, scores, color='red')
