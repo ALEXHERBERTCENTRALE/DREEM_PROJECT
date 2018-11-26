@@ -1,7 +1,8 @@
 import numpy as np
 import sklearn
 from sklearn import neighbors
-from sklearn import cross_validation
+#from sklearn import cross_validation
+from sklearn import model_selection
 from functools import reduce
 import operator
 import matplotlib.pyplot as plt
@@ -28,7 +29,9 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
         Vectors of predictions (same order as labels).
     """
     
-    cv_folds = cross_validation.StratifiedKFold(labels, n_folds, shuffle=True)
+    #cv_folds = cross_validation.StratifiedKFold(labels, n_folds, shuffle=True)
+    skf = model_selection.StratifiedKFold(n_folds, shuffle=True)
+    cv_folds= skf.split(design_matrix, labels)
     
     pred = np.zeros(labels.shape)
     prob = np.zeros(labels.shape)
