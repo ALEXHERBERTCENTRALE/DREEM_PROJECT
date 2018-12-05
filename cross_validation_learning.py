@@ -1,11 +1,12 @@
 import numpy as np
 import sklearn
-from sklearn import neighbors
+#from sklearn import neighbors
 #from sklearn import cross_validation
 from sklearn import model_selection
 from functools import reduce
 import operator
 import matplotlib.pyplot as plt
+import csv
 
 def cross_validate(design_matrix, labels, classifier, n_folds):
     """ Perform a cross-validation and returns the predictions.
@@ -126,8 +127,21 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     mat_ypred = np.transpose(mat_ypred, permut)
     mat_yprob = np.transpose(mat_yprob, permut)
     
-    return mat_theta, mat_ypred, mat_yprob
-        
+    print(mat_theta, mat_ypred, mat_yprob, clf)
+    return mat_theta, mat_ypred, mat_yprob, clf
+      
+def predict(design_matrix, classifier, save=False, name_save = None):
+    labels_pred = classifier.predict(design_matrix)
+    
+    if save:
+        with open(name_save + ".csv", "w", newline='') as csv_file:
+            fieldnames=['id','sleep_stage']
+            writer = csv.DictWriter(csv_file,fieldnames=fieldnames)
+            writer.writeheader()
+            for i in range(len(labels_pred)):
+                writer.writerow({'id': str(i),'sleep_stage': str(labels_pred[i])})
+                
+    return labels_pred
 
 def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id):
     
