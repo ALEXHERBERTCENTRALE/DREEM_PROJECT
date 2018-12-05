@@ -62,7 +62,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
         ytest_pred = classifier.predict(Xtest)
         pred[test_fold] = ytest_pred
         
-    return pred, prob
+    return pred, prob, classifier
 
 
 def learn(design_matrix, mlMethod, list_param, n_folds):
@@ -76,7 +76,7 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     # cas où la méthode de ML ne prend aucun hyperparamètre en argument
     if(nb_total_combination==0):
         clf = mlMethod()
-        ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
+        ypred, yprob, clf = cross_validate(design_matrix, labels, clf, n_folds)
         return [[]], [ypred], [yprob], clf
     
     list_theta=[0]*nb_total_combination
@@ -108,10 +108,10 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
             else:
                 theta[k]=list_param[k][quot]
                 p= rest
-        
+
         clf = mlMethod(*theta)
         
-        ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
+        ypred, yprob, clf = cross_validate(design_matrix, labels, clf, n_folds)
         list_theta[i]=theta
         list_ypred[i]=ypred
         list_yprob[i]=yprob
@@ -164,7 +164,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
 
     #cas où il n'y a pas d'hyperparamètre
-    if len(mat_theta[0])==0 or np.shape(mat_theta)==(1,1):
+    if len(mat_theta[0])==0 or sum(np.shape(mat_theta)[:len(np.shape(mat_theta))-1])==np.shape(mat_theta)[len(np.shape(mat_theta))-1]:
         print("F1-score :", *f1_scores)
         print("AUROC :", *aurocs)
         print("\n")
@@ -177,7 +177,9 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs)
     
 def printConfusionMatrix(labels,  mat_ypred):
-    conf_mat = sklearn.metrics.confusion_matrix(labels,  mat_ypred[0], labels=None, sample_weight=None).T
+    last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])
+    
+    conf_mat = sklearn.metrics.confusion_matrix(labels,  mat_ypred[last_dim_index], labels=None, sample_weight=None).T
     print("Matrice de confusion : \n")
     print("\t\tTrue 0  True 1  True 2  True 3  True 4")
     for p in range(5):
