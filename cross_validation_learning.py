@@ -3,6 +3,8 @@ import sklearn
 #from sklearn import neighbors
 #from sklearn import cross_validation
 from sklearn import model_selection
+from sklearn import cluster
+from sklearn import svm
 from functools import reduce
 import operator
 import matplotlib.pyplot as plt
@@ -52,13 +54,14 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
         classifier.fit(Xtrain, ytrain)
 
         # Predict probabilities on test data
-        ytest_prob = classifier.predict_proba(Xtest)
+        if type(classifier) not in [sklearn.cluster.k_means_.KMeans, sklearn.svm.classes.LinearSVC]:
+            ytest_prob = classifier.predict_proba(Xtest)
+            index_of_class_1 = 1-classifier.classes_[0]  # 0 if the first sample is positive, 1 otherwise
+            prob[test_fold] = ytest_prob[:, index_of_class_1]
+            
         ytest_pred = classifier.predict(Xtest)
-
-        index_of_class_1 = 1-classifier.classes_[0]  # 0 if the first sample is positive, 1 otherwise
-        
-        prob[test_fold] = ytest_prob[:, index_of_class_1]
         pred[test_fold] = ytest_pred
+        
     return pred, prob
 
 
@@ -74,7 +77,7 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     if(nb_total_combination==0):
         clf = mlMethod()
         ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
-        return [[]], [ypred], [yprob]
+        return [[]], [ypred], [yprob], clf
     
     list_theta=[0]*nb_total_combination
     list_ypred=[0]*nb_total_combination
@@ -127,7 +130,6 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     mat_ypred = np.transpose(mat_ypred, permut)
     mat_yprob = np.transpose(mat_yprob, permut)
     
-    print(mat_theta, mat_ypred, mat_yprob, clf)
     return mat_theta, mat_ypred, mat_yprob, clf
       
 def predict(design_matrix, classifier, save=False, name_save = None):
@@ -162,7 +164,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
 
     #cas où il n'y a pas d'hyperparamètre
-    if len(mat_theta[0])==0:
+    if len(mat_theta[0])==0 or np.shape(mat_theta)==(1,1):
         print("F1-score :", *f1_scores)
         print("AUROC :", *aurocs)
         print("\n")
