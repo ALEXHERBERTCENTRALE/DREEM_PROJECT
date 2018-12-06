@@ -9,6 +9,7 @@ from functools import reduce
 import operator
 import matplotlib.pyplot as plt
 import csv
+import sys
 
 def cross_validate(design_matrix, labels, classifier, n_folds):
     """ Perform a cross-validation and returns the predictions.
@@ -90,8 +91,21 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     for k in range(n_params-1):
         slices_size[k+1]=slices_size[k]*len(list_param[k])
     
+    
+    # setup toolbar
+    print("Progress...")
+    sys.stdout.write(" "+("_" * nb_total_combination) + "_\n")
+    sys.stdout.flush()
+    sys.stdout.write("[>")
+    sys.stdout.flush()
+    
     for i in range(nb_total_combination):
 
+        # update the bar
+        sys.stdout.write("\b")
+        sys.stdout.write("=>")
+        sys.stdout.flush()
+        
         p = i+1
         theta=[0]*n_params
         
@@ -116,6 +130,10 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
         list_ypred[i]=ypred
         list_yprob[i]=yprob
     
+    # close the bar
+    sys.stdout.write("\b")
+    sys.stdout.write("=]")
+        
     mat_theta_reshape_dim = dimensions + [n_params]
     mat_theta = np.reshape(list_theta, mat_theta_reshape_dim)
     
@@ -145,7 +163,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
                 
     return labels_pred
 
-def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id):
+def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear"):
     
     labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
     
@@ -173,8 +191,8 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     else:
         list_variable_hyperparam_values = mat_theta[tuple(index)][:,variable_hyperparam_id]
         
-        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores)
-        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs)
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores, xscale)
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
     
 def printConfusionMatrix(labels,  mat_ypred):
     last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])
@@ -188,9 +206,10 @@ def printConfusionMatrix(labels,  mat_ypred):
             row_to_print+="\t"+  str(conf_mat[p,t])
         print(row_to_print)
 
-def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_name, scores):
+def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_name, scores, xscale):
     plt.figure()
     plt.plot(list_variable_hyperparam_values, scores, color='red')
     plt.xlabel(variable_hyperparam_name, fontsize=16)
     plt.ylabel('Cross-validated : ' + score_name, fontsize=16)
+    plt.xscale(xscale)
     plt.title(variable_hyperparam_name, fontsize=16)
