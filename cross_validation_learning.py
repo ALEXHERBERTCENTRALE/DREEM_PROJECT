@@ -124,7 +124,7 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
                 p= rest
 
         clf = mlMethod(*theta)
-        
+
         ypred, yprob, clf = cross_validate(design_matrix, labels, clf, n_folds)
         list_theta[i]=theta
         list_ypred[i]=ypred
@@ -187,7 +187,8 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         print("F1-score :", *f1_scores)
         print("AUROC :", *aurocs)
         print("\n")
-        plotROC(*rates[0], "N/A")
+        if plot_roc:
+            plotROC(*rates[0], "N/A")
         printConfusionMatrix(labels,  mat_ypred)
         
     else:
@@ -197,7 +198,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
         if plot_roc:
             for i in range(len(rates)):
-                 plotROC(*rates[i], "Variable : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(*list_fixed_hyperparam_values_id))
+                 plotROC(*rates[i], variable_hyperparam_name + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(*list_fixed_hyperparam_values_id))
     
 def printConfusionMatrix(labels,  mat_ypred):
     last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])
