@@ -94,9 +94,9 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     
     # setup toolbar
     print("Progress...")
-    sys.stdout.write(" "+("_" * nb_total_combination) + "_\n")
+    sys.stdout.write("|"+("_" * nb_total_combination) + "_|\n")
     sys.stdout.flush()
-    sys.stdout.write("[>")
+    sys.stdout.write("|>")
     sys.stdout.flush()
     
     for i in range(nb_total_combination):
@@ -132,7 +132,7 @@ def learn(design_matrix, mlMethod, list_param, n_folds):
     
     # close the bar
     sys.stdout.write("\b")
-    sys.stdout.write("=]")
+    sys.stdout.write("=|\n")
         
     mat_theta_reshape_dim = dimensions + [n_params]
     mat_theta = np.reshape(list_theta, mat_theta_reshape_dim)
@@ -163,7 +163,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
                 
     return labels_pred
 
-def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear"):
+def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear", plot_roc=False):
     
     labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
     
@@ -179,6 +179,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     index=[slice(mat_ypred_yprob_shape[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
     
     f1_scores = [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred[tuple(index)]]
+    rates = [[sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]] for ypred in mat_ypred[tuple(index)]]
     aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
 
     #cas où il n'y a pas d'hyperparamètre
@@ -186,6 +187,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         print("F1-score :", *f1_scores)
         print("AUROC :", *aurocs)
         print("\n")
+        plotROC(*rates[0], "N/A")
         printConfusionMatrix(labels,  mat_ypred)
         
     else:
@@ -193,6 +195,9 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores, xscale)
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
+        if plot_roc:
+            for i in range(len(rates)):
+                 plotROC(*rates[i], "Variable : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(*list_fixed_hyperparam_values_id))
     
 def printConfusionMatrix(labels,  mat_ypred):
     last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])
@@ -205,6 +210,13 @@ def printConfusionMatrix(labels,  mat_ypred):
         for t in range(5):
             row_to_print+="\t"+  str(conf_mat[p,t])
         print(row_to_print)
+        
+def plotROC(rates, params):
+    plt.figure()
+    plt.plot(rates[0], rates[1], color='blue')
+    plt.xlabel("False Positive Rate", fontsize=16)
+    plt.ylabel("True Positive Rate", fontsize=16)
+    plt.title("ROC : "+ str(params), fontsize=16)
 
 def plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, score_name, scores, xscale):
     plt.figure()
