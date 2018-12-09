@@ -198,7 +198,7 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
         if plot_roc:
             for i in range(len(rates)):
-                 plotROC(*rates[i], variable_hyperparam_name + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(*list_fixed_hyperparam_values_id))
+                plotROC(*rates[i], str(variable_hyperparam_name) + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(list_fixed_hyperparam_values_id))
     
 def printConfusionMatrix(labels,  mat_ypred):
     last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])

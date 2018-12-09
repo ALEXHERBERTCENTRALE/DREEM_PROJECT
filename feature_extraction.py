@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+import sys
 
 ## Auxiliary functions
 def meanOfInterval(signal, freq_min, freq_max):
@@ -17,7 +18,7 @@ def mobilMean(signal , interval_width):  #use an odd number as interval_width, o
 
 ## methodOne(s) : feature-extraction methods
 
-def distanceMinMax( list_freq = None , param = None , rep_dim_feature_per_signal = False):  # param = [ interval_width ]
+def distanceMinMaxOne( list_freq = None , param = None , rep_dim_feature_per_signal = False):  # param = [ interval_width ]
     # Returns the sum of distances betwwen the minimum and the maximum on a given set of intervals. Intended to be used with the temporal signal
     if rep_dim_feature_per_signal:
         return 1
@@ -187,11 +188,29 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , mat_bool_
     
     c = 0
     i = 0
+    
+    # setup toolbar
+    print("Progress...")
+    sys.stdout.write("|"+("_" * len(list_methodOne)) + "_|\n")
+    sys.stdout.flush()
+    sys.stdout.write("|>")
+    sys.stdout.flush()
+    
     for methodOne in list_methodOne :
+        
+        # update the bar
+        sys.stdout.write("\b")
+        sys.stdout.write("=>")
+        sys.stdout.flush()
+        
         temp = len(list_key_list_extract[i])*methodOne(rep_dim_feature_per_signal = True)
         rep[:,c:c+temp] = extractFeatureAll(h5file_freq , methodOne , list_param[i] , mat_bool_extract_signal[i] )
         i+=1
         c+=temp
+    
+    # close the bar
+    sys.stdout.write("\b")
+    sys.stdout.write("=|\n")
     
     if save:
         temp_var_file = open(name_save + '.txt','wb')

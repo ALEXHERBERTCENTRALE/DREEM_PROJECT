@@ -17,8 +17,8 @@ def myKNeighborsClassifier(n_neighbors):
 def myLogisticRegression(C, max_iter):
     return linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=C, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=max_iter, multi_class='ovr', verbose=0, warm_start=False, n_jobs=None)
     
-def myDecisionTreeClassifier():
-    return tree.DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)
+def myDecisionTreeClassifier(splitter, min_samples_leaf, max_leaf_nodes, class_weight):
+    return tree.DecisionTreeClassifier(criterion='gini', splitter=splitter, max_depth=None, min_samples_split=2, min_samples_leaf=min_samples_leaf, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=0.0, min_impurity_split=None, class_weight=class_weight, presort=False)
     
 def myKMeans(n_clusters):
     return cluster.KMeans(n_clusters=n_clusters, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='auto')
