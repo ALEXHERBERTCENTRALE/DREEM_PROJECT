@@ -1,6 +1,9 @@
 import numpy as np
 import pickle
 import sys
+import os
+
+# os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 ## Auxiliary functions
 def meanOfInterval(signal, freq_min, freq_max):
@@ -234,12 +237,17 @@ def objectFromFile( file_path ):
     temp_var_file.close()
     return rep
 
-def concatenateDesignMatrices( file_path1 , file_path2 ):
-    return np.concatenate( (designMatrixFromFile(file_path1), designMatrixFromFile(file_path2)) , axis = 1)
+def concatenateDesignMatrices( file_path1 , file_path2 , name_save = None ):
+    rep = np.concatenate( (objectFromFile(file_path1), objectFromFile(file_path2)) , axis = 1)
+    if not name_save is None:
+        temp_var_file = open("design_matrix/" + name_save + '.txt','wb')
+        pickle.dump(labels , temp_var_file)
+        temp_var_file.close()
+    return rep
 
 def labelsCsv2Txt( file_path , name_save ):
     labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
-    temp_var_file = open("data/" + name_save + '.txt','wb')
+    temp_var_file = open('data/' + name_save + '.txt','wb')
     pickle.dump(labels , temp_var_file)
     temp_var_file.close()
 
@@ -254,3 +262,6 @@ mat_bool_test = np.array( [ [ 1,1,1 ] , [0,1,1] , [1,0,0] ] )
     
 # print(extractMultiFeatureAll(dico , [nbPikesOne , methodTestOne ] , [ [5,4] , [0]  ] , mat_bool_test))
 # print(extractMultiFeatureAll(dico , [nbPikesOne , methodTestOne , stdDeviationNbOne] , [ [5,4] , [0] , [10] ] , mat_bool_test))
+
+## Saving labels as .txt
+labelsCsv2Txt( 'data/train_y.csv' , 'train_y' )
