@@ -1,6 +1,7 @@
 import h5py
 import numpy as np
 import random as rd
+import pickle
 
 
     
@@ -54,6 +55,12 @@ def balanceData(h5file , write_path = 'X_balanced.h5',  nb_samples = None , uniq
                 new_labels[c] = labels[element_id]
                 c+=1
         X_balanced.create_dataset(name=feature, data=feature_chosen, dtype="float")
+    
+    # Saving new labels
+    temp_var_file = open(write_path + '_labels.txt','wb')
+    pickle.dump(new_labels , temp_var_file)
+    temp_var_file.close()
+    
     
     return X_balanced , new_labels
     
