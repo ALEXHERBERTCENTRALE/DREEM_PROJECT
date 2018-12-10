@@ -6,7 +6,7 @@ import pickle
 
     
 
-def balanceData(h5file , write_path = 'X_balanced.h5',  nb_samples = None , unique = True , labels_path = 'train_y.csv' ):
+def balanceData(h5file , write_name = 'X_balanced.h5',  nb_samples = None , unique = True , labels_path = 'data/train_y.csv' ):
     labels = list(np.loadtxt(labels_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int'))
     
     # Creating the lists of indexes for each labels
@@ -33,7 +33,7 @@ def balanceData(h5file , write_path = 'X_balanced.h5',  nb_samples = None , uniq
     
     new_labels = [0]*5*nb_samples
     
-    X_balanced = h5py.File( write_path , 'a' )
+    X_balanced = h5py.File("balanced_data/" + write_name , 'a' )
     
     
     
@@ -57,7 +57,7 @@ def balanceData(h5file , write_path = 'X_balanced.h5',  nb_samples = None , uniq
         X_balanced.create_dataset(name=feature, data=feature_chosen, dtype="float")
     
     # Saving new labels
-    temp_var_file = open(write_path + '_labels.txt','wb')
+    temp_var_file = open("balanced_data/" + write_name + '_labels.txt','wb')
     pickle.dump(new_labels , temp_var_file)
     temp_var_file.close()
     
