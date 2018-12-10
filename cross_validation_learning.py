@@ -39,6 +39,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
     
     pred = np.zeros(labels.shape)
     prob = np.zeros(labels.shape)
+
     for train_folds, test_fold in cv_folds:
         
         # Restrict data to train/test folds
@@ -68,7 +69,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
 
 def learn(design_matrix, mlMethod, list_param, n_folds):
     
-    labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = np.loadtxt('data/train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
 
     dimensions = list(len(param) for param in list_param[::-1])
 
@@ -154,7 +155,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
     labels_pred = classifier.predict(design_matrix)
     
     if save:
-        with open(name_save + ".csv", "w", newline='') as csv_file:
+        with open("predition/"+name_save + ".csv", "w", newline='') as csv_file:
             fieldnames=['id','sleep_stage']
             writer = csv.DictWriter(csv_file,fieldnames=fieldnames)
             writer.writeheader()
@@ -165,7 +166,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
 
 def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear", plot_roc=False):
     
-    labels = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = np.loadtxt('data/train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
     
     mat_theta_shape =  np.shape(mat_theta)
     mat_ypred_yprob_shape = np.shape(mat_ypred)
@@ -179,16 +180,16 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
     index=[slice(mat_ypred_yprob_shape[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
     
     f1_scores = [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred[tuple(index)]]
-    rates = [[sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]] for ypred in mat_ypred[tuple(index)]]
-    aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
+    #rates = [[sklearn.metrics.roc_curve(labels, ypred)[0:2]] for ypred in mat_ypred[tuple(index)]]
+    #aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
 
     #cas où il n'y a pas d'hyperparamètre
     if len(mat_theta[0])==0 or sum(np.shape(mat_theta)[:len(np.shape(mat_theta))-1])==np.shape(mat_theta)[len(np.shape(mat_theta))-1]:
         print("F1-score :", *f1_scores)
-        print("AUROC :", *aurocs)
+       # print("AUROC :", *aurocs)
         print("\n")
-        if plot_roc:
-            plotROC(*rates[0], "N/A")
+        #if plot_roc:
+            #plotROC(*rates[0], "N/A")
         printConfusionMatrix(labels,  mat_ypred)
         
     else:
@@ -196,9 +197,9 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, va
         
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores, xscale)
         plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
-        if plot_roc:
-            for i in range(len(rates)):
-                plotROC(*rates[i], str(variable_hyperparam_name) + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(list_fixed_hyperparam_values_id))
+        #if plot_roc:
+            #for i in range(len(rates)):
+                #plotROC(*rates[i], str(variable_hyperparam_name) + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(list_fixed_hyperparam_values_id))
     
 def printConfusionMatrix(labels,  mat_ypred):
     last_dim_index = tuple([0 for i in range(len(np.shape(mat_ypred))-1)])

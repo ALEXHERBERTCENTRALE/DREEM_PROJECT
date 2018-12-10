@@ -213,7 +213,7 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , mat_bool_
     sys.stdout.write("=|\n")
     
     if save:
-        temp_var_file = open(name_save + '.txt','wb')
+        temp_var_file = open("design_matrix/" +name_save + '.txt','wb')
         pickle.dump(rep , temp_var_file)
         temp_var_file.close()
         
