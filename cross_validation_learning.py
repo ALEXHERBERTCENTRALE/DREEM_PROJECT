@@ -10,6 +10,8 @@ import operator
 import matplotlib.pyplot as plt
 import csv
 import sys
+# import os
+# os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 def cross_validate(design_matrix, labels, classifier, n_folds):
     """ Perform a cross-validation and returns the predictions.
@@ -155,7 +157,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
     labels_pred = classifier.predict(design_matrix)
     
     if save:
-        with open("predition/"+name_save + ".csv", "w", newline='') as csv_file:
+        with open("prediction/"+name_save + ".csv", "w", newline='') as csv_file:
             fieldnames=['id','sleep_stage']
             writer = csv.DictWriter(csv_file,fieldnames=fieldnames)
             writer.writeheader()

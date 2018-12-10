@@ -2,12 +2,12 @@ import h5py
 import numpy as np
 
 def buildFFTDataset():
-    X_train = h5py.File('train.h5','r')#.copy()
-    X_test = h5py.File('test.h5','r')#.copy()
+    X_train = h5py.File('data/train.h5','r')#.copy()
+    X_test = h5py.File('data/test.h5','r')#.copy()
     keys = list(X_train.keys())
 
-    X_train_fft = h5py.File('X_train_fft.h5','a')
-    X_test_fft = h5py.File('X_test_fft.h5','a')
+    X_train_fft = h5py.File('data/X_train_fft.h5','a')
+    X_test_fft = h5py.File('data/X_test_fft.h5','a')
     
     train_dataset_size = len(X_train[keys[0]])    #replacing X_train_fft with X_train
     test_dataset_size = len(X_test[keys[0]])      #replacing X_test_fft  with X_test

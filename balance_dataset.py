@@ -1,6 +1,8 @@
 import h5py
 import numpy as np
 import random as rd
+# import os
+# os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 
     

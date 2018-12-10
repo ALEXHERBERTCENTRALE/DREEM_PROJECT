@@ -1,8 +1,7 @@
 import numpy as np
 import pickle
 import sys
-import os
-
+# import os
 # os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 ## Auxiliary functions
