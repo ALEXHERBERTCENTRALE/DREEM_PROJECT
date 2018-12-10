@@ -225,8 +225,10 @@ def extractMultiFeatureAll(h5file_freq , list_methodOne , list_param , mat_bool_
         #np.savetxt( name_save + '.txt' , rep , delimiter=',', fmt="%s")
     
     return rep
-    
-def designMatrixFromFile( file_path ):
+
+## File handling
+
+def objectFromFile( file_path ):
     temp_var_file = open(file_path ,'rb')
     rep = pickle.load(temp_var_file)
     temp_var_file.close()
@@ -234,7 +236,12 @@ def designMatrixFromFile( file_path ):
 
 def concatenateDesignMatrices( file_path1 , file_path2 ):
     return np.concatenate( (designMatrixFromFile(file_path1), designMatrixFromFile(file_path2)) , axis = 1)
-    
+
+def labelsCsv2Txt( file_path , name_save ):
+    labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    temp_var_file = open("data/" + name_save + '.txt','wb')
+    pickle.dump(labels , temp_var_file)
+    temp_var_file.close()
 
 ## to do some testing
 # pseudo-h5 file with 3 keys (3 indicators), and 3 samples, of length 29 each

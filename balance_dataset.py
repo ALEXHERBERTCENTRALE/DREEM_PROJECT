@@ -6,8 +6,8 @@ import pickle
 
     
 
-def balanceData(h5file , write_name = 'X_balanced',  nb_samples = None , unique = True , labels_path = 'data/train_y.csv' ):
-    labels = list(np.loadtxt(labels_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int'))
+def balanceData(h5file , write_name = 'X_balanced',  nb_samples = None , unique = True , labels_path = 'data/train_y.txt' ):
+    labels = list(objectFromFile(labels_path))
     
     # Creating the lists of indexes for each labels
     separate_indexes = [-1]*5

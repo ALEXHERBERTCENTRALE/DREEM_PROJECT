@@ -67,9 +67,9 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
     return pred, prob, classifier
 
 
-def learn(design_matrix, mlMethod, list_param, n_folds):
+def learn(design_matrix, mlMethod, list_param, n_folds , labels_path = 'data/train_y.txt'):
     
-    labels = np.loadtxt('data/train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = objectFromFile(labels_path)
 
     dimensions = list(len(param) for param in list_param[::-1])
 
@@ -164,9 +164,9 @@ def predict(design_matrix, classifier, save=False, name_save = None):
                 
     return labels_pred
 
-def visualizeResults(mat_theta, mat_ypred, mat_yprob, variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear", plot_roc=False):
+def visualizeResults(mat_theta, mat_ypred, mat_yprob, labels_path = 'data/train_y.txt', variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear", plot_roc=False):
     
-    labels = np.loadtxt('data/train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = objectFromFile(labels_path)
     
     mat_theta_shape =  np.shape(mat_theta)
     mat_ypred_yprob_shape = np.shape(mat_ypred)
