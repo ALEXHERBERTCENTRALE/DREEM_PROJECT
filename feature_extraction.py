@@ -151,12 +151,12 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     
 
 
-def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):  # param useless
+'''def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):  # param useless
     # Pointless method to test extractFeatureAll
     if rep_dim_feature_per_signal:
         return 2
     
-    return np.array([1,2])
+    return np.array([1,2])'''
 
 ## Global feature-extraction methods
     
