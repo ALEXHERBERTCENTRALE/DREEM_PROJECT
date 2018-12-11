@@ -166,7 +166,7 @@ def predict(design_matrix, classifier, save=False, name_save = None):
                 
     return labels_pred
 
-def visualizeResults(mat_theta, mat_ypred, mat_yprob, labels_path = 'data/train_y.txt', variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, xscale="linear", plot_roc=False):
+def visualizeResults(mat_theta, mat_ypred, mat_yprob,  variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, labels_path = 'data/train_y.txt', xscale="linear", plot_roc=False):
     
     labels = objectFromFile(labels_path)
     
@@ -182,6 +182,54 @@ def visualizeResults(mat_theta, mat_ypred, mat_yprob, labels_path = 'data/train_
     index=[slice(mat_ypred_yprob_shape[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
     
     f1_scores = [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred[tuple(index)]]
+    #rates = [[sklearn.metrics.roc_curve(labels, ypred)[0:2]] for ypred in mat_ypred[tuple(index)]]
+    #aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
+
+    #cas où il n'y a pas d'hyperparamètre
+    if len(mat_theta[0])==0 or sum(np.shape(mat_theta)[:len(np.shape(mat_theta))-1])==np.shape(mat_theta)[len(np.shape(mat_theta))-1]:
+        print("F1-score :", *f1_scores)
+       # print("AUROC :", *aurocs)
+        print("\n")
+        #if plot_roc:
+            #plotROC(*rates[0], "N/A")
+        printConfusionMatrix(labels,  mat_ypred)
+        
+    else:
+        list_variable_hyperparam_values = mat_theta[tuple(index)][:,variable_hyperparam_id]
+        
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "F1 score", f1_scores, xscale)
+        plotScore(variable_hyperparam_name ,list_variable_hyperparam_values, "AUROCS", aurocs, xscale)
+        #if plot_roc:
+            #for i in range(len(rates)):
+                #plotROC(*rates[i], str(variable_hyperparam_name) + " : " + str(list_variable_hyperparam_values[i]) + " ; Fixed : "+ str(list_fixed_hyperparam_values_id))
+
+def optimizeHyperParamSingleMethod( list_param_methodOne ,  variable_hyperparam_id, variable_hyperparam_name, list_fixed_hyperparam_values_id, labels_path = 'data/train_y.txt', xscale="linear", plot_roc=False):
+    # list_param_methodOne is of form : [ list for the first param of methodOne, list for the 2nd param , ... ]
+    n_param = list_param_methodOne
+    # create matrix of param_methodOne
+    mat_param_methodOne = np.array(np.meshgrid(*list_param_methodOne))
+    # get value with mat[nth param][position]
+    mat_param_methodOne2 = [ [mat_param_methodOne[p][index] for p in range(n_param)]  for index in (index of array) ]
+    # TODO 
+    
+    
+    labels = objectFromFile(labels_path)
+    
+    # mat_theta_shape =  np.shape(mat_theta)
+    # mat_ypred_yprob_shape = np.shape(mat_ypred)
+
+    #permut = [variable_hyperparam_id] + [i for i in range(len(mat_theta_shape)) if i != variable_hyperparam_id]
+    
+    # mat_theta = np.transpose(mat_theta, permut)
+    # mat_ypred = np.transpose(mat_ypred, permut)
+    # mat_yprob = np.transpose(mat_yprob, permut)
+
+    # index=[slice(mat_ypred_yprob_shape[variable_hyperparam_id])]+list_fixed_hyperparam_values_id
+    f1_scores = [ np.max( [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred]) 
+    
+    f1_scores = [sklearn.metrics.f1_score(labels, ypred, average='macro') for ypred in mat_ypred[tuple(index)]]
+    #np.unravel_index( np.argmax(u) , u.shape)
+    
     #rates = [[sklearn.metrics.roc_curve(labels, ypred)[0:2]] for ypred in mat_ypred[tuple(index)]]
     #aurocs = [sklearn.metrics.auc(*sklearn.metrics.roc_curve(labels, ypred, pos_label=1)[0:2]) for ypred in mat_ypred[tuple(index)]]
 
