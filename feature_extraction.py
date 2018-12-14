@@ -148,8 +148,34 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     
     th_amp , th_freq = param
     return [max(list_freq[th_freq:-1])>th_amp]
-    
 
+def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+    # Returns the mean of the signal
+    if rep_dim_feature_per_signal:
+        return 1
+
+    return np.mean(list_time)
+
+def meanOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+    # Returns the mean of the signal's absolute value
+    if rep_dim_feature_per_signal:
+        return 1
+
+    return np.mean(np.abs(list_time))
+    
+def maxOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+    # Returns the mean of the signal's absolute value
+    if rep_dim_feature_per_signal:
+        return 1
+
+    return np.max(np.abs(list_time))
+
+def minOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+    # Returns the mean of the signal's absolute value
+    if rep_dim_feature_per_signal:
+        return 1
+
+    return np.min(np.abs(list_time))
 
 '''def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):  # param useless
     # Pointless method to test extractFeatureAll
