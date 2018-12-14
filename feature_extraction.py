@@ -153,29 +153,28 @@ def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False
     # Returns the mean of the signal
     if rep_dim_feature_per_signal:
         return 1
-
-    return np.mean(list_time)
+    return [np.mean(list_time)]
 
 def meanOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
 
-    return np.mean(np.abs(list_time))
+    return [np.mean(np.abs(list_time))]
     
 def maxOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
 
-    return np.max(np.abs(list_time))
+    return [np.max(np.abs(list_time))]
 
 def minOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
 
-    return np.min(np.abs(list_time))
+    return [np.min(np.abs(list_time))]
 
 '''def methodTestOne(list_freq = None, param = None, rep_dim_feature_per_signal = False):  # param useless
     # Pointless method to test extractFeatureAll
@@ -266,12 +265,12 @@ def concatenateDesignMatrices( file_path1 , file_path2 , name_save = None ):
     rep = np.concatenate( (objectFromFile(file_path1), objectFromFile(file_path2)) , axis = 1)
     if not name_save is None:
         temp_var_file = open("design_matrix/" + name_save + '.txt','wb')
-        pickle.dump(labels , temp_var_file)
+        pickle.dump(rep , temp_var_file)
         temp_var_file.close()
     return rep
 
 def labelsCsv2Txt( file_path , name_save ):
-    labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = np.loadtxt(file_path,  delimiter=';', skiprows=1, usecols=range(1, 2)).astype('int')
     temp_var_file = open('data/' + name_save + '.txt','wb')
     pickle.dump(labels , temp_var_file)
     temp_var_file.close()
