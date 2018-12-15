@@ -111,7 +111,7 @@ def optimizeHyperParamSingleMethod(h5file, list_signals, methodOne, list_params_
         list_bool_extract_signal[i-1]=1
 
     print('\n----------------------------------------------------')
-    print('--- Optimisation ' + methodOne.__name__ + ' : signals ' + str(list_signals))
+    print('--- Optimisation ' + methodOne.__name__ + ' : signaux ' + str(list_signals))
     print('----------------------------------------------------\n')
 
     mat_param_methodOne = prepareAllCombinations(list_params_methodOne)
