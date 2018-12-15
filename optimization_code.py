@@ -4,15 +4,45 @@ Created on Fri Dec 14 22:28:15 2018
 
 @author: Alexandre Herbert
 """
-from cross_validation_learning import extractFeatureAll, objectFromFile, cross_validate
-from ml_methods import myDecisionTreeClassifier
+
+from feature_extraction import extractFeatureAll, objectFromFile
+from ml_methods import *
+from sklearn import model_selection
 import numpy as np
 import sklearn.metrics
 import matplotlib.pyplot as plt
 
+def cross_validate(design_matrix, labels, classifier, n_folds):
+    
+    #cv_folds = cross_validation.StratifiedKFold(labels, n_folds, shuffle=True)
+    skf = model_selection.StratifiedKFold(n_folds, shuffle=True)
+    cv_folds= skf.split(design_matrix, labels)
+    
+    pred = np.zeros(labels.shape)
+
+    for train_folds, test_fold in cv_folds:
+        
+        # Restrict data to train/test folds
+        Xtrain = design_matrix[train_folds, :]
+        ytrain = labels[train_folds]
+        Xtest = design_matrix[test_fold, :]
+
+        # Scale data
+        scaler = sklearn.preprocessing.StandardScaler() # create scaler
+        Xtrain = scaler.fit_transform(Xtrain) # fit the scaler to the training data and transform training data
+        Xtest = scaler.transform(Xtest) # transform test data
+        
+        # Fit classifier
+        classifier.fit(Xtrain, ytrain)
+            
+        ytest_pred = classifier.predict(Xtest)
+        pred[test_fold] = ytest_pred
+        
+    return pred
+
 def learnOneSetOfParams(design_matrix, list_param, n_folds , labels):
-    clf = myDecisionTreeClassifier(*list_param)
-    ypred, yprob, clf = cross_validate(design_matrix, labels, clf, n_folds)
+    clf = myRandomForestClassifier(*list_param)
+    ypred = cross_validate(design_matrix, labels, clf, n_folds)
     return ypred
 
 def computeMetrics(ypred, labels):
@@ -74,13 +104,14 @@ def printConfusionMatrix(ytrue,  ypred):
         print(row_to_print)
     print("")
 
-def optimizeHyperParamSingleMethod(h5file, num_signal, methodOne, list_params_methodOne, list_params_tree, n_folds, ytrue):
+def optimizeHyperParamSingleMethod(h5file, list_signals, methodOne, list_params_methodOne, list_params_tree, n_folds, ytrue):
     
     list_bool_extract_signal = np.zeros(11)
-    list_bool_extract_signal[num_signal-1]=1
+    for i in list_signals:
+        list_bool_extract_signal[i-1]=1
 
     print('\n----------------------------------------------------')
-    print('--- Optimisation ' + methodOne.__name__ + ' : signal ' + str(num_signal))
+    print('--- Optimisation ' + methodOne.__name__ + ' : signals ' + str(list_signals))
     print('----------------------------------------------------\n')
 
     mat_param_methodOne = prepareAllCombinations(list_params_methodOne)
@@ -114,7 +145,6 @@ def optimizeHyperParamSingleMethod(h5file, num_signal, methodOne, list_params_me
             f1_score = computeMetrics(ypred, ytrue)
             
             print('F1-score : ' + str(f1_score))
-            print('')
             printConfusionMatrix(ytrue,  ypred)
             
             f1_scores += [f1_score]
