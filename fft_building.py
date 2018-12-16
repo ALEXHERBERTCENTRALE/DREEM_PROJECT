@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
-import os
-os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
+# import os
+# os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 def buildFFTDataset():
     X_train = h5py.File('data/train.h5','r')#.copy()

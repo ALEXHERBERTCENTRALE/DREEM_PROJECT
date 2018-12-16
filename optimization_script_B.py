@@ -9,6 +9,8 @@ from optimization_code import optimizeHyperParamSingleMethod
 from feature_extraction import *
 import h5py
 import numpy as np
+import os
+os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 """ Parameters to define for optimization """
 
