@@ -8,22 +8,23 @@ Created on Fri Dec 14 22:16:37 2018
 from optimization_code import optimizeHyperParamSingleMethod
 from feature_extraction import *
 import h5py
+import numpy as np
 
 """ Parameters to define for optimization """
 
-X_path = 'balanced_data/X_train_time_balanced.h5'
-y_path = 'balanced_data/X_train_time_balanced_labels.txt'
+X_path = 'balanced_data/X_train_balanced.h5'
+y_path = 'balanced_data/X_train_balanced_labels.txt'
 
-list_signals = [1,2,3]
+list_signals = [i for i in range(1,12)]
 
-methodOne = maxOfAbsOne
-list_params_methodOne = []
+methodOne = meanDiffNeighbOne
+list_params_methodOne = [] #[np.arange(1,51,1) ]
 
-n_estimators=[10, 100, 1000]
-criterion=['gini', 'entropy']
+n_estimators=[100]  #[10, 100, 1000]
+criterion=['gini']  #['gini', 'entropy']
 max_depth=[None]
-min_samples_split=[2, 1000,500]
-min_samples_leaf=[1, 1000, 500] 
+min_samples_split=[2]  #[2, 1000,500]
+min_samples_leaf=[1]   #[1, 1000, 500] 
 min_impurity_decrease=[0.0]
 
 n_folds=5

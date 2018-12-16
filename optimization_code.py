@@ -154,7 +154,10 @@ def optimizeHyperParamSingleMethod(h5file, list_signals, methodOne, list_params_
                 best_params_methodOne = params_methodOne
                 best_params_tree = params_tree
 
-    print('-----   Final results   -----')    
+    print('-----   Final results   -----') 
+    print('\n----------------------------------------------------')
+    print('--- Optimisation ' + methodOne.__name__ + ' : signaux ' + str(list_signals))
+    print('----------------------------------------------------\n')   
     print('Best Params_methodOne :', best_params_methodOne)
     print('Best Params_tree :', best_params_tree)
     print('Best F1-score :', best_f1_score)

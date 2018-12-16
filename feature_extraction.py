@@ -1,8 +1,8 @@
 import numpy as np
 import pickle
 import sys
-# import os
-# os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
+import os
+os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 
 ## Auxiliary functions
 def meanOfInterval(signal, freq_min, freq_max):
@@ -270,7 +270,7 @@ def concatenateDesignMatrices( file_path1 , file_path2 , name_save = None ):
     return rep
 
 def labelsCsv2Txt( file_path , name_save ):
-    labels = np.loadtxt(file_path,  delimiter=';', skiprows=1, usecols=range(1, 2)).astype('int')
+    labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
     temp_var_file = open('data/' + name_save + '.txt','wb')
     pickle.dump(labels , temp_var_file)
     temp_var_file.close()

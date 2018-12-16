@@ -1,8 +1,10 @@
 import h5py
+import pickle
 import numpy as np
 import random as rd
 # import os
 # os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
+from feature_extraction import objectFromFile
 
 
     
