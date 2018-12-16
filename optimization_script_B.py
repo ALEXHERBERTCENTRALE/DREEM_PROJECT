@@ -19,8 +19,8 @@ y_path = 'balanced_data/X_train_balanced_labels.txt'
 
 list_signals = [11]
 
-methodOne = nbPikesOne
-list_params_methodOne = [np.arange(1,51,2) , np.linspace(0,200,20)]
+methodOne = stdDeviationNbOne
+list_params_methodOne = [np.arange(1,51,1) ]#, np.linspace(0,51,5)]
 
 n_estimators=[100]  #[10, 100, 1000]
 criterion=['gini']  #['gini', 'entropy']
