@@ -99,10 +99,9 @@ for i in range(nf):
 
 ## Importing data
 X_train_balanced = h5py.File('balanced_data/X_train_balanced.h5' , 'r' )
-y_train_balanced = np.array(objectFromFile('balanced_data/X_train_balanced_labels.txt'))
 
 X_train_fft_balanced = h5py.File('balanced_data/X_train_fft_balanced.h5' , 'r' )
-y_train_fft_balanced = np.array(objectFromFile('balanced_data/X_train_fft_balanced_labels.txt'))
+
 
 X_test = h5py.File('data/X_test.h5')
 
