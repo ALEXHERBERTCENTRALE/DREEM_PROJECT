@@ -13,10 +13,10 @@ import matplotlib.pyplot as plt
 X_path = 'balanced_data/X_train_fft_balanced.h5'
 y_path = 'balanced_data/X_train_fft_balanced_labels.txt'
 
-list_signals = [i for i in range(4,11)]
+list_signals = [11]
 
-methodOne = indexMaxAmpOne
-list_params_methodOne = [np.arange(1,51,2)]# , np.linspace(0,1,20)]
+methodOne = meanDiffNeighbOne
+list_params_methodOne = [np.arange(1,51,2)  ]# , np.linspace(0,1,20)]
 
 n_estimators=[100]  #[10, 100, 1000]
 criterion=['gini']  #['gini', 'entropy']

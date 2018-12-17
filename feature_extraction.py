@@ -126,11 +126,14 @@ def indexMaxAmpFastOne(list_freq = None , param = None , rep_dim_feature_per_sig
     return [ np.argmax(list_mean)*interval_width + interval_width//2 ]
 
 
-def meanDiffNeighbOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):  #param is useless
+def meanDiffNeighbOne(list_freq = None , param = None , rep_dim_feature_per_signal = False):  #param = [interval_width]  (for moving mean
     # Returns the average of absolute difference of amplitude between all neighbours frequencies
     if rep_dim_feature_per_signal:
         return 1
-    return [np.average(list(abs(list_freq[i+1]-list_freq[i]) for i in range(len(list_freq)-1)))]
+    
+    interval_width, = param
+    moving_mean_list = mobilMean(list_freq , interval_width) if interval_width>1 else list_freq.copy()
+    return [np.average(list(abs(moving_mean_list[i+1]-moving_mean_list[i]) for i in range(len(moving_mean_list)-1)))]
 
 
     
@@ -151,7 +154,8 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
         
     normalized_list_freq = 1/max(list_freq)*list_freq
     th_amp , th_freq = param
-    return [max(normalized_list_freq[th_freq:-1])>th_amp]
+    index_th_freq = int(th_freq*(len(list_freq)-1))
+    return [max(normalized_list_freq[index_th_freq:-1])>th_amp]
 
 def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False): # param is useless
     # Returns the mean of the signal
