@@ -1,3 +1,5 @@
+from feature_extraction import objectFromFile
+
 import numpy as np
 import sklearn
 #from sklearn import neighbors
@@ -12,6 +14,7 @@ import csv
 import sys
 # import os
 # os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
+
 
 def cross_validate(design_matrix, labels, classifier, n_folds):
     """ Perform a cross-validation and returns the predictions.
@@ -71,7 +74,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
 
 def learn(design_matrix, mlMethod, list_param, n_folds , labels_path = 'data/train_y.txt'):
     
-    labels = objectFromFile(labels_path)
+    labels = np.array(objectFromFile(labels_path))
 
     dimensions = list(len(param) for param in list_param[::-1])
 

@@ -273,8 +273,16 @@ def objectFromFile( file_path ):
     temp_var_file.close()
     return rep
 
-def concatenateDesignMatrices( file_path1 , file_path2 , name_save = None ):
+def concatenateDesignMatricesFromPath( file_path1 , file_path2 , name_save = None ):
     rep = np.concatenate( (objectFromFile(file_path1), objectFromFile(file_path2)) , axis = 1)
+    if not name_save is None:
+        temp_var_file = open("design_matrix/" + name_save + '.txt','wb')
+        pickle.dump(rep , temp_var_file)
+        temp_var_file.close()
+    return rep
+
+def concatenateDesignMatrices( mat1 , mat2 , name_save = None ):
+    rep = np.concatenate( (mat1 , mat2) , axis = 1)
     if not name_save is None:
         temp_var_file = open("design_matrix/" + name_save + '.txt','wb')
         pickle.dump(rep , temp_var_file)
