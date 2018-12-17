@@ -42,7 +42,7 @@ list_methods_freq = [ distanceMinMaxOne , maxAmpOne , freqMinLimitAmpOne , nbPik
 mat_bool_extract_signal_temp = np.array([  [0]*3 + [1]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [1]  ,
-                                           [1]*3 + [0]*7 + [1]  ,
+                                           [1]*3 + [1]*7 + [1]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
@@ -54,7 +54,7 @@ mat_bool_extract_signal_temp = np.array([  [0]*3 + [1]*7 + [0]  ,
 mat_param_extract_signal_temp = np.array([  [[2]]*3 + [[5]]*7 + [[42]]  ,
                                            [[]]*3 + [[]]*7 + [[]]  ,
                                            [[0.44]]*3 + [[0.18]]*7 + [[0.57]]  ,
-                                           [[18,0.2105]]*3 + [[]]*7 + [[16,0.3367]]  ,
+                                           [[18,0.2105]]*3 + [[2, 0.0526]]*7 + [[16,0.3367]]  ,
                                            [[11]]*3 + [[31]]*7 + [[18]]  ,
                                            [[1]]*3 + [[1]]*7 + [[1]]  ,
                                            [[42]]*3 + [[6]]*7 + [[44]]  ,
@@ -126,7 +126,7 @@ if create_new_prediction:
     prediction_matrix_freq = extractMultiFeatureAllAdapt(X_test_fft , list_methods_freq , mat_bool_extract_signal_freq , mat_param_extract_signal_freq , save = True , name_save = "big_prediction_matrix_" + name + "_freq")
     
     
-    prediction_matrix = concatenateDesignMatrices( prediction_matrix_temp , matrix_freq , name_save = "big_prediction_matrix_" + name )
+    prediction_matrix = concatenateDesignMatrices( prediction_matrix_temp , prediction_matrix_freq , name_save = "big_prediction_matrix_" + name )
 
 else:
     prediction_matrix = objectFromFile("design_matrix/big_prediction_matrix_" + name + ".txt" )
@@ -142,4 +142,4 @@ visualizeResults( mat_theta , mat_ypred , mat_yprob , 0 , "" , [0,0,0,0,0] , lab
 
 ## Predicting
 
-predict( prediction_matrix , clf , save = True , name_save = "big_prediction" + name)
+predict( prediction_matrix , clf , save = True , name_save = "big_prediction_" + name)
