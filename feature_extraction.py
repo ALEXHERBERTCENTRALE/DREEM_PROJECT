@@ -41,8 +41,9 @@ def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_sign
         return 1
     
     amp_lim, = param
-    for i in range(len(list_freq)-1,-1,-1):
-        if list_freq[i] > amp_lim:
+    normalized_list_freq = 1/max(list_freq)*list_freq
+    for i in range(len(normalized_list_freq)-1,-1,-1):
+        if normalized_list_freq[i] > amp_lim:
             return [i+1]
     return [0]
 
@@ -54,6 +55,7 @@ def nbPikesOne(list_freq = None, param = None , rep_dim_feature_per_signal = Fal
         return 1
     interval_width, amp_lim = param
     mobil_mean_list_freq = mobilMean(list_freq , interval_width)
+    mobil_mean_list_freq = 1/max(mobil_mean_list_freq)*mobil_mean_list_freq
     nb_pikes = 0
     # is_interval_in_a_pike = [False , False]
     # for i in range(len(mobil_mean_list_freq)):
@@ -81,6 +83,7 @@ def nbPikesFastOne(list_freq = None, param = None , rep_dim_feature_per_signal =
         return 1
     interval_width, amp_lim = param
     intervals = buildIntervals(len(list_freq), interval_width)
+    normalized_list_freq = 1/max(list_freq)*list_freq
     nb_pikes = 0
     is_interval_in_a_pike = [False , False]
     # for minim, maxim in intervals:
@@ -94,7 +97,7 @@ def nbPikesFastOne(list_freq = None, param = None , rep_dim_feature_per_signal =
     
     is_interval_in_a_pike = 4   #code : 1 = [T,T] , 2 = [T,F] , 3 = [F,T] , 4 = [F,F]
     for minim, maxim in intervals:
-        mean_value = meanOfInterval(list_freq, minim, maxim)
+        mean_value = meanOfInterval(normalized_list_freq, minim, maxim)
         if mean_value > amp_lim:
             is_interval_in_a_pike = 1 if is_interval_in_a_pike in [1,2] else 2
         else:
@@ -145,31 +148,32 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     # Consider returning TRUE iff there are more than a given number of points in the upper right corner
     if rep_dim_feature_per_signal:
         return 1
-    
+        
+    normalized_list_freq = 1/max(list_freq)*list_freq
     th_amp , th_freq = param
-    return [max(list_freq[th_freq:-1])>th_amp]
+    return [max(normalized_list_freq[th_freq:-1])>th_amp]
 
-def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False): # param is useless
     # Returns the mean of the signal
     if rep_dim_feature_per_signal:
         return 1
     return [np.mean(list_time)]
 
-def meanOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+def meanOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):  # param is useless
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
 
     return [np.mean(np.abs(list_time))]
     
-def maxOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+def maxOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):  # param is useless
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
 
     return [np.max(np.abs(list_time))]
 
-def minOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):
+def minOfAbsOne(list_time = None , param = None , rep_dim_feature_per_signal = False):  # param is useless
     # Returns the mean of the signal's absolute value
     if rep_dim_feature_per_signal:
         return 1
