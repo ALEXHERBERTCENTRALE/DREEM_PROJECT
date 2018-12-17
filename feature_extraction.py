@@ -155,7 +155,11 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     normalized_list_freq = 1/max(list_freq)*list_freq
     th_amp , th_freq = param
     index_th_freq = int(th_freq*(len(list_freq)-1))
-    return [max(normalized_list_freq[index_th_freq:-1])>th_amp]
+    
+    
+    return(len(([amp for amp in normalized_list_freq[index_th_freq:] if amp > th_amp])))
+        
+    #return [max(normalized_list_freq[index_th_freq:-1])>th_amp]
 
 def meanOne(list_time = None , param = None , rep_dim_feature_per_signal = False): # param is useless
     # Returns the mean of the signal
@@ -277,11 +281,11 @@ def concatenateDesignMatrices( file_path1 , file_path2 , name_save = None ):
         temp_var_file.close()
     return rep
 
-def labelsCsv2Txt( file_path , name_save ):
-    labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
-    temp_var_file = open('data/' + name_save + '.txt','wb')
-    pickle.dump(labels , temp_var_file)
-    temp_var_file.close()
+#def labelsCsv2Txt( file_path , name_save ):
+#    labels = np.loadtxt(file_path,  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
+#    temp_var_file = open('data/' + name_save + '.txt','wb')
+#    pickle.dump(labels , temp_var_file)
+#    temp_var_file.close()
 
 ## to do some testing
 # pseudo-h5 file with 3 keys (3 indicators), and 3 samples, of length 29 each
@@ -296,4 +300,4 @@ mat_bool_test = np.array( [ [ 1,1,1 ] , [0,1,1] , [1,0,0] ] )
 # print(extractMultiFeatureAll(dico , [nbPikesOne , methodTestOne , stdDeviationNbOne] , [ [5,4] , [0] , [10] ] , mat_bool_test))
 
 ## Saving labels as .txt
-labelsCsv2Txt( 'data/train_y.csv' , 'train_y' )
+#labelsCsv2Txt( 'data/train_y.csv' , 'train_y' )
