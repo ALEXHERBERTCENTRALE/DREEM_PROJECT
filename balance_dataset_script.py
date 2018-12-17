@@ -8,5 +8,4 @@ from balance_dataset import balanceData
 X_train = h5py.File('data/train.h5','r')
 X_train_fft = h5py.File('data/X_train_fft.h5','r')
 
-balanceData(X_train , 'X_train_balanced')
-balanceData(X_train_fft , 'X_train_fft_balanced' )
+balanceData([X_train , X_train_fft] , write_name_list = ['X_train_balanced' , 'X_train_fft_balanced'] , write_name_labels = 'X_train_balanced_labels' ,  nb_samples = None , unique = True , labels_path = 'data/train_y.txt' )
