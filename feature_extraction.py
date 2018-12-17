@@ -157,7 +157,7 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     index_th_freq = int(th_freq*(len(list_freq)-1))
     
     
-    return(len(([amp for amp in normalized_list_freq[index_th_freq:] if amp > th_amp])))
+    return([len(([amp for amp in normalized_list_freq[index_th_freq:] if amp > th_amp]))])
         
     #return [max(normalized_list_freq[index_th_freq:-1])>th_amp]
 
