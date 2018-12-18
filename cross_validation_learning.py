@@ -69,7 +69,7 @@ def cross_validate(design_matrix, labels, classifier, n_folds):
         ytest_pred = classifier.predict(Xtest)
         pred[test_fold] = ytest_pred
         
-    return pred, prob, classifier
+    return pred, prob
 
 
 def learn(design_matrix, mlMethod, list_param, n_folds , labels_path = 'data/train_y.txt'):
@@ -131,7 +131,7 @@ def learn(design_matrix, mlMethod, list_param, n_folds , labels_path = 'data/tra
 
         clf = mlMethod(*theta)
 
-        ypred, yprob, clf = cross_validate(design_matrix, labels, clf, n_folds)
+        ypred, yprob = cross_validate(design_matrix, labels, clf, n_folds)
         list_theta[i]=theta
         list_ypred[i]=ypred
         list_yprob[i]=yprob
@@ -154,10 +154,26 @@ def learn(design_matrix, mlMethod, list_param, n_folds , labels_path = 'data/tra
     mat_ypred = np.transpose(mat_ypred, permut)
     mat_yprob = np.transpose(mat_yprob, permut)
     
-    return mat_theta, mat_ypred, mat_yprob, clf
+    return mat_theta, mat_ypred, mat_yprob
+
+def learnEverything(design_matrix, mlMethod, list_param , labels_path = 'data/train_y.txt'):
+    
+    labels = np.array(objectFromFile(labels_path))
+
+    clf = mlMethod(*list_param)
+
+    # Scale data
+    scaler = sklearn.preprocessing.StandardScaler() # create scaler
+    design_matrix = scaler.fit_transform(design_matrix) # fit the scaler to the training data and transform training data
+    
+    # Fit classifier
+    clf.fit(design_matrix, labels)
+
+    return  clf , scaler
       
-def predict(design_matrix, classifier, save=False, name_save = None):
-    labels_pred = classifier.predict(design_matrix)
+def predict(design_matrix, classifier, scaler ,  save=False, name_save = None):
+    design_matrix_scaled = scaler.transform(design_matrix)
+    labels_pred = classifier.predict(design_matrix_scaled)
     
     if save:
         with open("prediction/"+name_save + ".csv", "w", newline='') as csv_file:

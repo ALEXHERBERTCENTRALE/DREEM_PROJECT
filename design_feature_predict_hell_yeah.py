@@ -15,7 +15,7 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'long_test_1'
+name = 'first'
 
 mlMethod = myRandomForestClassifier
 
@@ -32,6 +32,8 @@ n_folds=5
 
 list_params_tree = [n_estimators, criterion, max_depth, min_samples_split, min_samples_leaf, min_impurity_decrease]
 
+list_params_tree_everything = [*n_estimators, *criterion, *max_depth, *min_samples_split, *min_samples_leaf, *min_impurity_decrease]
+
 ## Methods to be used
 list_methods_time = [ distanceMinMaxOne , maxAmpOne , freqMinLimitAmpOne , nbPikesOne , indexMaxAmpOne , meanDiffNeighbOne , stdDeviationNbOne , meanOne , meanOfAbsOne , maxOfAbsOne , minOfAbsOne ]
 
@@ -42,7 +44,7 @@ list_methods_freq = [ distanceMinMaxOne , maxAmpOne , freqMinLimitAmpOne , nbPik
 mat_bool_extract_signal_temp = np.array([  [0]*3 + [1]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [1]  ,
-                                           [1]*3 + [1]*7 + [1]  ,
+                                           [0]*3 + [1]*7 + [1]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
@@ -50,6 +52,18 @@ mat_bool_extract_signal_temp = np.array([  [0]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]    ])
+
+ # mat_bool_extract_signal_temp = np.array([  [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [1]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]  ,
+ #                                           [0]*3 + [0]*7 + [0]    ])
 
                                            
 mat_param_extract_signal_temp = np.array([  [[2]]*3 + [[5]]*7 + [[42]]  ,
@@ -81,6 +95,16 @@ mat_bool_extract_signal_freq = np.array([  [0]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]    ])
+
+# mat_bool_extract_signal_freq = np.array([  [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [1]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]  ,
+#                                            [0]*3 + [0]*7 + [0]    ])
                                            
 mat_param_extract_signal_freq = np.array([  [[2]]*3 + [[19]]*7 + [[16]]  ,
                                            [[]]*3 + [[]]*7 + [[]]  ,
@@ -135,7 +159,9 @@ else:
 ## Learning
 
 
-mat_theta , mat_ypred , mat_yprob , clf = learn( matrix , mlMethod , list_params_tree , n_folds , labels_path = labels_path)
+mat_theta , mat_ypred , mat_yprob  = learn( matrix , mlMethod , list_params_tree , n_folds , labels_path = labels_path)
+
+clf , scaler = learnEverything( matrix , mlMethod , list_params_tree_everything , labels_path = labels_path )
 
 ## Visualizing
 
@@ -143,4 +169,4 @@ visualizeResults( mat_theta , mat_ypred , mat_yprob , 0 , "" , [0,0,0,0,0] , lab
 
 ## Predicting
 
-predict( prediction_matrix , clf , save = True , name_save = "big_prediction_" + name)
+predict( prediction_matrix , clf , scaler = scaler , save = True , name_save = "big_prediction_" + name)
