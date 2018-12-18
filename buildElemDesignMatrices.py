@@ -95,13 +95,13 @@ X_test_fft = h5py.File('data/X_test_fft.h5')
 
 def buildAndSaveMatrix(h5file_freq, methodOne, param, list_bool_extract_signal, name_save):
     rep = extractFeatureAll(h5file_freq , methodOne , param , list_bool_extract_signal)
-    temp_var_file = open("design_matrix/" + name_save + '.txt','wb')
+    temp_var_file = open("design_matrix/elem/" + name_save + '.txt','wb')
     pickle.dump(rep , temp_var_file)
     temp_var_file.close()
     
 def buildAllElemDesignMatrices():
     
-    print("Progress for temp matrices...")
+    print("Building temp matrices...")
     sys.stdout.write("|"+("_" * nb_temp_features*3) + "_|\n")
     sys.stdout.flush()
     sys.stdout.write("|>")
@@ -125,8 +125,8 @@ def buildAllElemDesignMatrices():
     # close the bar
     sys.stdout.write("\b")
     sys.stdout.write("=|\n")
-    print("Progress for freq matrices...")
-    sys.stdout.write("|"+("_" * nb_temp_features*3) + "_|\n")
+    print("Building freq matrices...")
+    sys.stdout.write("|"+("_" * nb_freq_features*3) + "_|\n")
     sys.stdout.flush()
     sys.stdout.write("|>")
     sys.stdout.flush()
