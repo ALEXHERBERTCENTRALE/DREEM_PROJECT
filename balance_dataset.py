@@ -49,19 +49,19 @@ def balanceData(h5file_list , write_name_list = ['X_balanced' , 'X_fft_balanced'
     
     # Creating new labels
     # Extracting chosen data
-    for i in range(len(write_name_list)):
+    for num_file in range(len(write_name_list)):
         for feature_id in range(len(keys)):
             feature=keys[feature_id]
             feature_chosen=[[]]*5*nb_samples
             c = 0
             for element_id in range(dataset_size):
                 if any(element_id in separate_indexes_chosen[i] for i in range(5)):
-                    signals = h5file_list[i][feature]
-                    feature_chosen[c] = signals[element_id]
-                    if i==0:
+                    # signals = h5file_list[i][feature]
+                    feature_chosen[c] = h5file_list[num_file][feature][element_id]
+                    if num_file==0:
                         new_labels[c] = labels[element_id]
                     c+=1
-            X_balanced[i].create_dataset(name=feature, data=feature_chosen, dtype="float")
+            X_balanced[num_file].create_dataset(name=feature, data=feature_chosen, dtype="float")
     
     # Saving new labels
     temp_var_file = open("balanced_data/" + write_name_labels + '.txt','wb')
