@@ -15,11 +15,11 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'first'
+name = 'smalltestold1'
 
 mlMethod = myRandomForestClassifier
 
-labels_path = 'balanced_data/X_train_balanced_labels.txt'
+labels_path = 'balanced_data/old/X_train_balanced_labels.txt'
 
 n_estimators=[100]  #[10, 100, 1000]
 criterion=['gini']  #['gini', 'entropy']
@@ -50,6 +50,8 @@ mat_bool_extract_signal_temp = np.array([  [0]*3 + [1]*7 + [0]  ,
                                            [1]*3 + [1]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]  ,
                                            [0]*3 + [0]*7 + [0]    ])
+
+mat_bool_extract_signal_temp = np.zeros((11 , 11))
                                            
 mat_param_extract_signal_temp = np.array([  [[2]]*3 + [[5]]*7 + [[42]]  ,
                                            [[]]*3 + [[]]*7 + [[]]  ,
@@ -98,9 +100,9 @@ for i in range(nf):
             mat_param_extract_signal_freq[i,j] = None
 
 ## Importing data
-X_train_balanced = h5py.File('balanced_data/X_train_balanced.h5' , 'r' )
+X_train_balanced = h5py.File('balanced_data/old/X_train_balanced.h5' , 'r' )
 
-X_train_fft_balanced = h5py.File('balanced_data/X_train_fft_balanced.h5' , 'r' )
+X_train_fft_balanced = h5py.File('balanced_data/old/X_train_fft_balanced.h5' , 'r' )
 
 
 X_test = h5py.File('data/X_test.h5')
