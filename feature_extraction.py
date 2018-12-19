@@ -41,7 +41,7 @@ def freqMinLimitAmpOne(list_freq = None, param = None , rep_dim_feature_per_sign
         return 1
     
     amp_lim, = param
-    normalized_list_freq = 1/max(list_freq)*list_freq
+    normalized_list_freq = 1/max(abs(list_freq))*list_freq
     for i in range(len(normalized_list_freq)-1,-1,-1):
         if normalized_list_freq[i] > amp_lim:
             return [i+1]
@@ -55,7 +55,7 @@ def nbPikesOne(list_freq = None, param = None , rep_dim_feature_per_signal = Fal
         return 1
     interval_width, amp_lim = param
     mobil_mean_list_freq = mobilMean(list_freq , interval_width)
-    mobil_mean_list_freq = 1/max(mobil_mean_list_freq)*mobil_mean_list_freq
+    mobil_mean_list_freq = 1/max(abs(mobil_mean_list_freq))*mobil_mean_list_freq
     nb_pikes = 0
     # is_interval_in_a_pike = [False , False]
     # for i in range(len(mobil_mean_list_freq)):
@@ -83,7 +83,7 @@ def nbPikesFastOne(list_freq = None, param = None , rep_dim_feature_per_signal =
         return 1
     interval_width, amp_lim = param
     intervals = buildIntervals(len(list_freq), interval_width)
-    normalized_list_freq = 1/max(list_freq)*list_freq
+    normalized_list_freq = 1/max(abs(list_freq))*list_freq
     nb_pikes = 0
     is_interval_in_a_pike = [False , False]
     # for minim, maxim in intervals:
@@ -152,7 +152,7 @@ def upperRightOne(list_freq = None , param = None , rep_dim_feature_per_signal =
     if rep_dim_feature_per_signal:
         return 1
         
-    normalized_list_freq = 1/max(list_freq)*list_freq
+    normalized_list_freq = 1/max(abs(list_freq))*list_freq
     th_amp , th_freq = param
     index_th_freq = int(th_freq*(len(list_freq)-1))
     

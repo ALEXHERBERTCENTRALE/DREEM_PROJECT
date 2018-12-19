@@ -15,7 +15,7 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'first'
+name = 'true_one'
 
 mlMethod = myRandomForestClassifier
 
