@@ -67,6 +67,8 @@ mat_bool_extract_signal_freq = np.array([  [0,0,0]  ,
                                            [0,0,0]  ,
                                            [0,0,0]    ])
 
+mat_bool_extract_signal_freq = np.ones((9,3), dtype = int)
+
 mat_param_extract_signal_freq = np.array([  [[2],[19],[16]]  ,
                                            [[],[],[]]  ,
                                            [[0.87],[0.09],[0.97]]  ,
@@ -82,8 +84,8 @@ signals_per_type = [[1,1,1,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,1]]
 types_names = ["acc", "eeg", "oxy"]
 
-X_train_balanced = h5py.File('balanced_data/X_train_balanced.h5' , 'r' )
-X_train_fft_balanced = h5py.File('balanced_data/X_train_fft_balanced.h5' , 'r' )
+X_train_balanced = h5py.File('data/X_train.h5' , 'r' )
+X_train_fft_balanced = h5py.File('data/X_train_fft.h5' , 'r' )
 
 X_test = h5py.File('data/X_test.h5')
 X_test_fft = h5py.File('data/X_test_fft.h5')
@@ -108,9 +110,9 @@ def buildAllElemDesignMatrices():
         for signal_type in range(3):
             param = mat_param_extract_signal_temp[id_feat][signal_type]
             signals = signals_per_type[signal_type]
-            if mat_bool_extract_signal_temp[id_feat][signal_type]==1:
-                buildAndSaveMatrix(X_train_balanced, methodOne, param , signals, "Xtrain_time_" +methodOne.__name__+ "_" + types_names[signal_type])
-                buildAndSaveMatrix(X_test, methodOne, param , signals, "Xtest_time_" +methodOne.__name__+ "_" + types_names[signal_type])
+            # if mat_bool_extract_signal_temp[id_feat][signal_type]==1:
+            #     buildAndSaveMatrix(X_train_balanced, methodOne, param , signals, "Xtrain_time_" +methodOne.__name__+ "_" + types_names[signal_type] )
+            #     buildAndSaveMatrix(X_test, methodOne, param , signals, "Xtest_time_" +methodOne.__name__+ "_" + types_names[signal_type])
              
             # update the bar
             sys.stdout.write("\b")
@@ -133,8 +135,8 @@ def buildAllElemDesignMatrices():
             param = mat_param_extract_signal_freq[id_feat][signal_type]
             signals = signals_per_type[signal_type]
             if mat_bool_extract_signal_freq[id_feat][signal_type]==1:
-                buildAndSaveMatrix(X_train_fft_balanced, methodOne, param , signals, "Xtrain_fft_" +methodOne.__name__+ "_" + types_names[signal_type])
-                buildAndSaveMatrix(X_test_fft, methodOne, param , signals, "Xtest_fft_" +methodOne.__name__+ "_" + types_names[signal_type])
+                buildAndSaveMatrix(X_train_fft_balanced, methodOne, param , signals, "Xtrain_fft_" +methodOne.__name__+ "_" + types_names[signal_type] + '_all')
+                #buildAndSaveMatrix(X_test_fft, methodOne, param , signals, "Xtest_fft_" +methodOne.__name__+ "_" + types_names[signal_type])
                 
             # update the bar
             sys.stdout.write("\b")
