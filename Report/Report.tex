@@ -1,0 +1,153 @@
+\documentclass{article}
+
+%\begin{figure}[h]
+%\begin{center}
+%\caption{\label{1} titre}
+%\includegraphics[scale=0.5]{{nom_photo}.png}
+%\captionsetup{labelformat=empty}
+%\caption{ sources : nom_source}
+%\end{center}
+%\end{figure}
+
+% \begin{center}
+% \begin{tabular}{|c|c|}
+			% \hline
+			% a & a \\
+			
+			% a & a  \\
+			% \hline
+			% a & a \\
+			
+			% a & a  \\
+			% \hline
+			% a & a \\
+			
+			% a & a  \\
+			% \hline
+% \end{tabular}
+% \end{center}
+
+%[ForwardSearch("%bm.pdf","%Wc",%l,0,0,1)]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{gensymb}
+\usepackage{array}
+\usepackage{caption}
+%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+%\newgeometry{top=1in,bottom=1in,right=0.5in,left=1.5in}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+
+
+\newcommand{\deriv}[2]{\frac{\partial #1}{\partial #2}}
+\DeclareMathOperator{\Tr}{Tr}
+\title{Machine learning pour la classification de phases de sommeil}
+\author{Alexandre Herbert et Baptiste Turpin}
+\date{}
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\setcounter{tocdepth}{2}
+\renewcommand{\contentsname}{Sommaire}
+\tableofcontents
+
+
+\section{Contexte}
+
+\section{Choix d'implémentation}
+\subsection{Choix du modèle}
+Random Forest tout ça tout ça
+\subsection{Sélection des méthodes de validation algorithmique}
+cross validation toussa toussa
+
+
+\section{Pré-traitement des données}
+on a normalisé, ce genre de trucs
+Après selection des features ?
+
+\section{Selection de features}
+Parler des observations faites sur les plots (featuring jolies images) 
+Et puis aussi on prend les fft. Pourquoi ? Pourquoi pas.
+\begin{itemize}
+\item obs 1 
+\item obs 2
+\end{itemize}
+
+D'où features potentiellement pertinentes (discriminantes) :
+ \begin{center}
+ \begin{tabular}{|c|c|}
+			 \hline
+			 a & a \\
+			
+			 a & a  \\
+			 \hline
+			 a & a \\
+			
+			 a & a  \\
+			 \hline
+			 a & a \\
+			
+			 a & a  \\
+			 \hline
+ \end{tabular}
+ \end{center}
+
+\section{Optimisation des hyperparamètres des features}
+coucou, on a croisé les hyperparamètres et des choses stytlées.
+Comme on est critiques et forts, on remarque qu'on risque d'overfitter sur les data de test en faisant ça !
+
+\section{Résultats}
+
+\section{ Critiques et perspectives}
+
+\begin{lstlisting}
+X_test_fft = h5py.File('data/X_test_fft.h5')
+
+def buildAndSaveMatrix(h5file_freq, methodOne, param, list_bool_extract_signal, name_save):
+    rep = extractFeatureAll(h5file_freq , methodOne , param , list_bool_extract_signal)
+    temp_var_file = open("design_matrix/elem/" + name_save + '.txt','wb')
+    pickle.dump(rep , temp_var_file)
+    temp_var_file.close()
+		len(bidule)
+\end{lstlisting}
+
+
+\end{document}
