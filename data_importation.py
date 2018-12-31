@@ -7,17 +7,14 @@ Created on Fri Nov 23 14:29:36 2018
 
 import numpy as np
 import h5py
+import matplotlib.pylab as plt
+from feature_extraction import objectFromFile
 
 # Chargement des données
 
-X_train = h5py.File('train.h5', 'r')
-X_test = h5py.File('test.h5', 'r')
-y = np.loadtxt('train_y.csv',  delimiter=',', skiprows=1, usecols=range(1, 2)).astype('int')
-
-#print(list(X_train.keys()))
-#print(list(X_test.keys()))
-#print(y)
-
+X_train = h5py.File('data/X_train.h5', 'r')
+X_test = h5py.File('data/X_test.h5', 'r')
+y = np.array(objectFromFile('data/train_y.txt'))
 
 accelerometer_x_train = X_train['accelerometer_x']
 accelerometer_y_train = X_train['accelerometer_y']
@@ -46,3 +43,14 @@ pulse_oximeter_infrared_test = X_test['pulse_oximeter_infrared']
 keys=list(X_train.keys())
 train_dataset_size=len(accelerometer_x_train)
 test_dataset_size=len(accelerometer_x_test)
+
+plt.hist(y, range = (0, 5))
+plt.show()
+
+for i in range(2):
+    plt.figure(figsize=(15,15))
+    for k_id in range(len(keys)):
+        k=keys[k_id]
+        plt.subplot(11,11,k_id+1)
+        plt.plot(X_train[k][i])
+        plt.title(str(k_id) + " (Phase : " + str(y[i]) + ")")
