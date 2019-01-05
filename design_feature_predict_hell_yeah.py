@@ -15,11 +15,12 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'true_one'
+name = 'green_and_yellow'
 
 mlMethod = myRandomForestClassifier
 
 labels_path = 'balanced_data/X_train_balanced_labels.txt'
+
 
 n_estimators=[100]  #[10, 100, 1000]
 criterion=['gini']  #['gini', 'entropy']
@@ -156,6 +157,11 @@ if create_new_prediction:
 else:
     prediction_matrix = objectFromFile("design_matrix/big_prediction_matrix_" + name + ".txt" )
 
+##☻ Killing the game
+matrix = objectFromFile('design_matrix/Xtrain.txt')
+prediction_matrix = objectFromFile('design_matrix/Xtest.txt')
+labels_path = 'data/train_y.txt'
+
 ## Learning
 
 
@@ -169,4 +175,4 @@ visualizeResults( mat_theta , mat_ypred , mat_yprob , 0 , "" , [0,0,0,0,0] , lab
 
 ## Predicting
 
-predict( prediction_matrix , clf , scaler = scaler , save = True , name_save = "big_prediction_" + name)
+predict( prediction_matrix , clf , scaler = scaler , save = True , name_save =  name)

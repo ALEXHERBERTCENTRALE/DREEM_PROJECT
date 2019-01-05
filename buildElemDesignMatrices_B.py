@@ -25,15 +25,29 @@ nb_freq_features = len(list_methods_freq)
 
 mat_bool_extract_signal_temp = np.array([  [0,0,0]  ,
                                            [0,0,0]  ,
+                                           [0,1,1]  ,
+                                           [1,1,1]  ,
                                            [0,0,0]  ,
                                            [0,0,0]  ,
                                            [0,0,0]  ,
-                                           [0,0,0]  ,
-                                           [0,0,0]  ,
-                                           [0,0,0]  ,
-                                           [0,0,0]  ,
-                                           [0,0,0]  ,
-                                           [0,0,0] ])
+                                           [1,1,1]  ,
+                                           [1,1,1]  ,
+                                           [1,1,1]  ,
+                                           [1,1,1] ])
+
+mat_bool_extract_signal_temp = np.ones((11,3) , dtype = int) - np.array([[1,1,1]  ,
+                              [1,1,1]  ,
+                              [1,0,0]  ,
+                              [0,0,0]  ,
+                              [0,0,0]  ,
+                              [1,1,0]  ,
+                              [1,0,0]  ,
+                              [1,1,1]  ,
+                              [1,1,1]  ,
+                              [1,1,1]  ,
+                              [1,1,1] ])
+
+#mat_bool_extract_signal_temp = np.zeros((11,3), dtype = int )
 
 mat_param_extract_signal_temp = np.array([  [[2],[5],[42]]  ,
                                            [[],[],[]]  ,
@@ -67,7 +81,7 @@ mat_bool_extract_signal_freq = np.array([  [0,0,0]  ,
                                            [0,0,0]  ,
                                            [0,0,0]    ])
 
-mat_bool_extract_signal_freq = np.ones((9,3), dtype = int)
+mat_bool_extract_signal_freq = np.zeros((9,3), dtype = int)
 
 mat_param_extract_signal_freq = np.array([  [[2],[19],[16]]  ,
                                            [[],[],[]]  ,
@@ -110,9 +124,9 @@ def buildAllElemDesignMatrices():
         for signal_type in range(3):
             param = mat_param_extract_signal_temp[id_feat][signal_type]
             signals = signals_per_type[signal_type]
-            # if mat_bool_extract_signal_temp[id_feat][signal_type]==1:
-            #     buildAndSaveMatrix(X_train_balanced, methodOne, param , signals, "Xtrain_time_" +methodOne.__name__+ "_" + types_names[signal_type] )
-            #     buildAndSaveMatrix(X_test, methodOne, param , signals, "Xtest_time_" +methodOne.__name__+ "_" + types_names[signal_type])
+            if mat_bool_extract_signal_temp[id_feat][signal_type]==1:
+               buildAndSaveMatrix(X_train_balanced, methodOne, param , signals, "Xtrain_time_" +methodOne.__name__+ "_" + types_names[signal_type] + '_all')
+               buildAndSaveMatrix(X_test, methodOne, param , signals, "Xtest_time_" +methodOne.__name__+ "_" + types_names[signal_type])
              
             # update the bar
             sys.stdout.write("\b")
@@ -136,7 +150,7 @@ def buildAllElemDesignMatrices():
             signals = signals_per_type[signal_type]
             if mat_bool_extract_signal_freq[id_feat][signal_type]==1:
                 buildAndSaveMatrix(X_train_fft_balanced, methodOne, param , signals, "Xtrain_fft_" +methodOne.__name__+ "_" + types_names[signal_type] + '_all')
-                #buildAndSaveMatrix(X_test_fft, methodOne, param , signals, "Xtest_fft_" +methodOne.__name__+ "_" + types_names[signal_type])
+                buildAndSaveMatrix(X_test_fft, methodOne, param , signals, "Xtest_fft_" +methodOne.__name__+ "_" + types_names[signal_type])
                 
             # update the bar
             sys.stdout.write("\b")

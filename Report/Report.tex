@@ -89,6 +89,7 @@
 \renewcommand{\contentsname}{Sommaire}
 \tableofcontents
 
+\newpage
 
 \section{Contexte}
 
@@ -187,14 +188,14 @@ Nous calculons à partir de cet apprentissage le F1-score ainsi que la matrice d
 Nous avons dans un premier temps affiché les signaux temporels du dataset d'entrainement afin d'établir des caractéristiques des différentes phases de sommeil.
 \\
 
-FIGURE
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[scale=0.5]{"images/temp_signals".png}
-%\caption{Signaux temporels pour différentes phases}
-%\end{center}
-%\end{figure}
-\\
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.3]{{images/temp_signals}.png}
+\caption{Signaux temporels pour différentes phases}
+\end{center}
+\end{figure}
+
+\clearpage
 
 Nous pouvons faire les premières observations suivantes :
 \\
@@ -214,17 +215,17 @@ Plus généralement, on constate que :
 \end{itemize}
 \vspace{0.5cm}
 
-Cela nous amène à considérer en supplément les caractéristiques fréquentielles des signaux. Nous avons calculé la valeur absolue de la transformée de Fourier des signaux temporels.
+Cela nous amène à considérer en supplément les caractéristiques fréquentielles des signaux. Nous avons calculé la valeur absolue de la transformée de Fourier des signaux temporels (figure 2).
 \\
 
-FIGURE
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[scale=0.5]{"images/freq_signals".png}
-%\caption{FFT des signaux pour différentes phases}
-%\end{center}
-%\end{figure}
-\\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.3]{{images/freq_signals}.png}
+\caption{FFT des signaux pour différentes phases}
+\end{center}
+\end{figure}
+
 
 On constate sur la comparaison des FFT que l'amplitude maximale observée varie beaucoup en fonction de la phase. En outre, en ne considérant que la forme de la FFT et la distribution des points dasn la fenêtre d'affichage, on tire les observations suivantes :
 \\
@@ -285,14 +286,14 @@ minOfAbs = min(abs(signal))
 Nous avons dans un premier temps pu constater que le dataset d'entrainement est déséquilibré :
 \\
 
-FIGURE
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[scale=0.5]{"images/hist".png}
-%\caption{Distribution du dataset d'entrainement entre les classes}
-%\end{center}
-%\end{figure}
-\\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{{images/hist}.png}
+\caption{Distribution du dataset d'entrainement entre les classes}
+\end{center}
+\end{figure}
+
 
 Pour cette raison, nous avons appliqué deux méthodes :\\
 
