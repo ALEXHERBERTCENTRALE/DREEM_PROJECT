@@ -25,27 +25,17 @@ nb_freq_features = len(list_methods_freq)
 
 mat_bool_extract_signal_temp = np.array([  [0,0,0]  ,
                                            [0,0,0]  ,
+                                           [0,0,0]  ,
+                                           [0,0,0]  ,
+                                           [0,0,0]  ,
+                                           [0,0,0]  ,
                                            [0,1,1]  ,
-                                           [1,1,1]  ,
                                            [0,0,0]  ,
                                            [0,0,0]  ,
                                            [0,0,0]  ,
-                                           [1,1,1]  ,
-                                           [1,1,1]  ,
-                                           [1,1,1]  ,
-                                           [1,1,1] ])
+                                           [0,0,0] ])
 
-mat_bool_extract_signal_temp = np.ones((11,3) , dtype = int) - np.array([[1,1,1]  ,
-                              [1,1,1]  ,
-                              [1,0,0]  ,
-                              [0,0,0]  ,
-                              [0,0,0]  ,
-                              [1,1,0]  ,
-                              [1,0,0]  ,
-                              [1,1,1]  ,
-                              [1,1,1]  ,
-                              [1,1,1]  ,
-                              [1,1,1] ])
+
 
 #mat_bool_extract_signal_temp = np.zeros((11,3), dtype = int )
 

@@ -15,7 +15,7 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'green_and_yellow'
+name = 'green_and_yellow_except_stddeviation_eeg'
 
 mlMethod = myRandomForestClassifier
 
