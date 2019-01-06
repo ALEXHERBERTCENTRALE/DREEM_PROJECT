@@ -15,16 +15,16 @@ import h5py
 create_new_design_matrix = True
 create_new_prediction = True
 
-name = 'all_of_them'
+name = 'green_yellow_all_boosted'
 
 mlMethod = myRandomForestClassifier
 
 labels_path = 'balanced_data/X_train_balanced_labels.txt'
 
 
-n_estimators=[100]  #[10, 100, 1000]
+n_estimators=[1000]  #[10, 100, 1000]
 criterion=['gini']  #['gini', 'entropy']
-max_depth=[None]
+max_depth=[16]
 min_samples_split=[2]  #[2, 1000,500]
 min_samples_leaf=[1]   #[1, 1000, 500] 
 min_impurity_decrease=[0.0]
