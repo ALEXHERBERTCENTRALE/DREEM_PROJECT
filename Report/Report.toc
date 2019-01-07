@@ -1,10 +1,17 @@
 \select@language {french}
-\contentsline {section}{\numberline {I}Contexte}{3}
-\contentsline {section}{\numberline {II}Choix d'impl\IeC {\'e}mentation}{4}
-\contentsline {subsection}{\numberline {1}Choix du mod\IeC {\`e}le}{4}
-\contentsline {subsection}{\numberline {2}S\IeC {\'e}lection des m\IeC {\'e}thodes de validation algorithmique}{4}
-\contentsline {section}{\numberline {III}Selection de features}{5}
-\contentsline {section}{\numberline {IV}Pr\IeC {\'e}-traitement des donn\IeC {\'e}es}{8}
-\contentsline {section}{\numberline {V}Optimisation des hyperparam\IeC {\`e}tres des features}{9}
-\contentsline {section}{\numberline {VI}R\IeC {\'e}sultats}{10}
-\contentsline {section}{\numberline {VII} Critiques et perspectives}{10}
+\contentsline {section}{\numberline {I}\hspace {0.3cm} Contexte}{3}
+\contentsline {section}{\numberline {II}\hspace {0.3cm} Choix d'impl\IeC {\'e}mentation}{3}
+\contentsline {subsection}{\numberline {1}Choix du mod\IeC {\`e}le}{3}
+\contentsline {subsection}{\numberline {2}Description du mod\IeC {\`e}le}{4}
+\contentsline {subsection}{\numberline {3}S\IeC {\'e}lection des m\IeC {\'e}thodes de validation algorithmique}{4}
+\contentsline {section}{\numberline {III}\hspace {0.3cm} S\IeC {\'e}lection de features}{4}
+\contentsline {section}{\numberline {IV}\hspace {0.3cm} Pr\IeC {\'e}-traitement des donn\IeC {\'e}es}{8}
+\contentsline {section}{\numberline {V}\hspace {0.3cm} Optimisation des hyperparam\IeC {\`e}tres des features}{8}
+\contentsline {section}{\numberline {VI}\hspace {0.3cm} R\IeC {\'e}sultats}{9}
+\contentsline {section}{\numberline {VII}\hspace {0.3cm} Critiques et perspectives}{9}
+\contentsline {section}{\numberline {VIII}\hspace {0.3cm} Annexe : code Python}{10}
+\contentsline {subsection}{\numberline {1}Script principal}{10}
+\contentsline {subsection}{\numberline {2}Extraction de features}{12}
+\contentsline {subsection}{\numberline {3}M\IeC {\'e}thode de Cross-validation}{17}
+\contentsline {subsection}{\numberline {4}Building elementary matrices}{22}
+\contentsline {subsection}{\numberline {5}Building design matrix from elementary matrices}{24}

@@ -4,14 +4,15 @@ Created on Tue Dec 18 20:49:08 2018
 
 @author: Alexandre Herbert
 """
-
+import os
+os.chdir('C:/Users/tbapt/Desktop/Documents/Ecole/3A/Machine_learning/DREEM_PROJECT')
 import numpy as np
 import sys
 import pickle
 from feature_extraction import objectFromFile
 import h5py
 
-h5_train = h5py.File('balanced_data/X_train_balanced.h5' , 'r' )
+h5_train = h5py.File('data/train.h5' , 'r' )
 nb_train_samples = len(h5_train[list(h5_train.keys())[0]]) 
 h5_test = h5py.File('data/X_test.h5')
 nb_test_samples = len(h5_test[list(h5_test.keys())[0]]) 
@@ -32,6 +33,8 @@ selected_temp_matrices = np.array([[0,0,0]  ,
                               [0,0,0]  ,
                               [0,0,0] ])
 
+selected_temp_matrices = np.ones((11,3) , dtype = int)
+
 selected_freq_matrices = np.array([[0,0,0]  ,
                                   [0,0,0]  ,
                                   [0,0,0]  ,
@@ -41,6 +44,8 @@ selected_freq_matrices = np.array([[0,0,0]  ,
                                   [0,0,0]  ,
                                   [0,0,0]  ,
                                   [0,0,0] ])
+
+selected_freq_matrices = np.ones((9,3) , dtype = int)
 
 nb_temp_features = len(selected_temp_matrices)
 nb_freq_features = len(selected_freq_matrices)
@@ -61,9 +66,10 @@ def assembleElemDesignMatrices():
         methodOne_name = list_methods_time[id_feat]
         for signal_type in range(3):
             type_name = types_names[signal_type]
-            Xtrain_elem_path = "design_matrix/elem/Xtrain_time_" + methodOne_name + "_" + type_name + ".txt"
+            Xtrain_elem_path = "design_matrix/elem/Xtrain_time_" + methodOne_name + "_" + type_name + "_all.txt"
             Xtest_elem_path = "design_matrix/elem/Xtest_time_" + methodOne_name + "_" + type_name + ".txt"
             if selected_temp_matrices[id_feat][signal_type]==1:
+                #print(Xtrain.shape , objectFromFile(Xtrain_elem_path).shape)
                 Xtrain = np.concatenate( (Xtrain, objectFromFile(Xtrain_elem_path)) , axis = 1)
                 Xtest = np.concatenate( (Xtest, objectFromFile(Xtest_elem_path)) , axis = 1)
                 
@@ -86,7 +92,7 @@ def assembleElemDesignMatrices():
         methodOne_name = list_methods_freq[id_feat]
         for signal_type in range(3):
             type_name = types_names[signal_type]
-            Xtrain_elem_path = "design_matrix/elem/Xtrain_fft_" + methodOne_name + "_" + type_name + ".txt"
+            Xtrain_elem_path = "design_matrix/elem/Xtrain_fft_" + methodOne_name + "_" + type_name + "_all.txt"
             Xtest_elem_path = "design_matrix/elem/Xtest_fft_" + methodOne_name + "_" + type_name + ".txt"
             if selected_freq_matrices[id_feat][signal_type]==1:
                 Xtrain = np.concatenate( (Xtrain, objectFromFile(Xtrain_elem_path)) , axis = 1)
