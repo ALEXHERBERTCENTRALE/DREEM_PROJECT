@@ -145,7 +145,7 @@ Dans un tout premier temps, nous avons utilisé un apprentissage non-supervisé 
 La lecture du rapport fourni nous a ensuite rapidement orienté vers les modèles évalués comme étant les plus performants pour ce problème : le Random Forest ou le simple Decision Tree.
 \\
 
-Nous nous sommes finalement tournés vers le Random Forest, afin d'obtenir une classification plus fine qu'un simple Decision Tree, et puisque nous ne cherchons pas ici à déterminer un sens "physique" pour les noeuds. Il en effet plus facile d'interpréter un simple arbre de décision d'après ses noeuds, tandis qu'un algorithme de Random Forest, générant une multitude d'arbres de décision aléatoires, sera plus difficilement interprétable. L'objectif était ici uniquement d'obtenir une classification efficace. Il aurait pu être intéressant (dans une optique de modélisation) de regarder au contraire des modèles interprétables.
+Nous nous sommes finalement tournés vers le Random Forest, afin d'obtenir une classification plus fine qu'un simple Decision Tree, et puisque nous ne cherchons pas ici à déterminer un sens "physique" pour les noeuds. Il est en effet plus facile d'interpréter un simple arbre de décision d'après ses noeuds, tandis qu'un algorithme de Random Forest, générant une multitude d'arbres de décision aléatoires, sera plus difficilement interprétable. L'objectif était ici uniquement d'obtenir une classification efficace. Il aurait pu être intéressant (dans une optique de modélisation) de regarder au contraire des modèles interprétables.
 \\
 
 Nous avons cherché à optimiser les hyperparamètres suivants (attributs de la classe sklearn.ensemble.RandomForestClassifier) :
@@ -224,7 +224,7 @@ Plus généralement, on constate que :
 
 \begin{itemize}
 \item Les signaux se composent de motifs répétés pour les phases 1, 2 et 3.
-\item La forme des motifs, leur amplitude et leur fréquence d'apparition semble varier en fonction de la phase
+\item La forme des motifs, leur amplitude et leur fréquence d'apparition semblent varier en fonction de la phase
 \end{itemize}
 \vspace{0.5cm}
 
@@ -244,7 +244,7 @@ On constate sur la comparaison des FFT que l'amplitude maximale observée varie 
 \\
 
 \begin{itemize}
-\item EEGs : la FFT est plus ou moins bien dessinée en fonction de la phase : pour une plage de fréquences réduite donnée, il semblerait que la variance en amplitudes des différents points soit plus ou moins forte selon la phase de sommeil. Dans le cas ci-dessus, la phase 2 présente un écart-type faible sur toute plage de fréquences réduite, tandis que les phases 3 et 4 présentent un nuage de points plus étendu.
+\item EEGs : le spectre est plus ou moins bien dessiné en fonction de la phase : pour une plage de fréquences réduite donnée, il semblerait que la variance en amplitudes des différents points soit plus ou moins forte selon la phase de sommeil. Dans le cas ci-dessus, la phase 2 présente un écart-type faible sur toute plage de fréquences réduite, tandis que les phases 3 et 4 présentent un nuage de points plus étendu.
 \item Accéléromètres : des points isolés en haut à droite de la fenêtre d'affichage peuvent être observés sur les phases 0, 1 et 3.
 \item Oxymétrie colorimétrique : on distingue plusieurs pics, qui sont plus ou moins espacés et d'amplitudes plus ou moins équilibrées en fonction des phases.
 \end{itemize}
@@ -359,7 +359,7 @@ L'éxecution du script Python après écriture des différentes étapes listées
 
 \section{\hspace{0.3cm} Critiques et perspectives}
 
-Comme expliqué précédemment, nous avons optimisé les hyperparamètres des features en validation croisée. En travaillant ainsi, nous savions qu'il y avait un risque d'overfitter les set de validation. Ce phénomène s'est révélé être bien plus important que nous ne le craignions, et le F1-score obtenu sur le dataset de test était nettement plus faible que celui obtenu en validation croisée.
+Comme expliqué précédemment, nous avons optimisé les hyperparamètres des features en validation croisée. En travaillant ainsi, nous savions qu'il y avait un risque d'overfitter les sets de validation. Ce phénomène s'est révélé être bien plus important que nous ne le craignions, et le F1-score obtenu sur le dataset de test était nettement plus faible que celui obtenu en validation croisée.
 
 \vspace{\baselineskip}
 
@@ -367,7 +367,7 @@ Nous aurions pu étudier d'autres modèles que le Random Forest. D'après le rap
 
 \vspace{\baselineskip}
 
-Par ailleurs, nous estimons que certains des features choisis pouvaient être corrélés, ce qui diminue leur valeur dans l'apprentissage et fait tendre vers l'overfitting. Pour pallier à ce problème, nous aurions pu calculer les matrices de corrélation afin d'identifier les features corrélés et ne sélectionner que les plus pertinents. On peut noter cependant que le fait d'utiliser un algorithme de Random Forest permet de limiter l'overfitting sur les features.
+Par ailleurs, nous estimons que certains des features choisis pouvaient être corrélés, ce qui diminue leur valeur dans l'apprentissage et fait tendre vers l'overfitting. Pour pallier à ce problème, nous aurions pu calculer les matrices de corrélation des features afin d'identifier les features corrélés et ne sélectionner que les plus pertinents. On peut noter cependant que le fait d'utiliser un algorithme de Random Forest permet de limiter l'overfitting sur les features.
 
 \vspace{\baselineskip}
 
